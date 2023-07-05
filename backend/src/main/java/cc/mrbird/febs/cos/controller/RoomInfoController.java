@@ -32,7 +32,7 @@ public class RoomInfoController {
      */
     @GetMapping("/page")
     public R page(Page<RoomInfo> page, RoomInfo roomInfo) {
-        return R.ok();
+        return R.ok(roomInfoService.selectRoomPage(page, roomInfo));
     }
 
     /**

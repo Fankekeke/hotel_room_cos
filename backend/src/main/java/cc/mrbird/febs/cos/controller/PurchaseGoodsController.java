@@ -32,7 +32,7 @@ public class PurchaseGoodsController {
      */
     @GetMapping("/page")
     public R page(Page<PurchaseGoods> page, PurchaseGoods purchaseGoods) {
-        return R.ok();
+        return R.ok(purchaseGoodsService.selectPurchasePage(page, purchaseGoods));
     }
 
     /**

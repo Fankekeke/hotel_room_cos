@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.DeptInfoMapper">
+
+    <!-- 分页获取部门信息 -->
+    <select id="selectDeptPage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        code,
+        dept_name,
+        content,
+        create_date,
+        create_by,
+        del_flag
+        from
+        dept_info
+        where
+        1 = 1
+        and del_flag = '0'
+        <if test="deptInfo.code != null and deptInfo.code != ''">
+            AND code LIKE CONCAT('%',#{deptInfo.code},'%')
+        </if>
+        <if test="deptInfo.deptName != null and deptInfo.deptName != ''">
+            AND dept_name LIKE CONCAT('%',#{deptInfo.deptName},'%')
+        </if>
+        order by
+        create_date desc
+    </select>
+</mapper>

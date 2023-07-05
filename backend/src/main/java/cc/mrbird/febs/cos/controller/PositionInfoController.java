@@ -32,7 +32,7 @@ public class PositionInfoController {
      */
     @GetMapping("/page")
     public R page(Page<PositionInfo> page, PositionInfo positionInfo) {
-        return R.ok();
+        return R.ok(positionInfoService.selectPositionPage(page, positionInfo));
     }
 
     /**
