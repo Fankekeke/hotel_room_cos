@@ -3,8 +3,10 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.RoomInfo;
+import cc.mrbird.febs.cos.entity.RoomType;
 import cc.mrbird.febs.cos.service.IRoomInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class RoomInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(roomInfoService.list());
+        return R.ok(roomInfoService.list(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, 0)));
     }
 
     /**

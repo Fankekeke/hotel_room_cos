@@ -11,6 +11,7 @@
         oi.start_date,
         oi.end_date,
         oi.rent_day,
+        oi.days,
         oi.total_price,
         oi.user_id,
         oi.create_date,

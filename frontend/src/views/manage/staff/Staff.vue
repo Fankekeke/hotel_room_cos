@@ -23,10 +23,21 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工状态"
+                label="所属部门"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.status" allowClear>
+                <a-select v-model="queryParams.deptId" allowClear>
+                  <a-select-option value="1">在职</a-select-option>
+                  <a-select-option value="2">离职</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="所属岗位"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParams.deptId" allowClear>
                   <a-select-option value="1">在职</a-select-option>
                   <a-select-option value="2">离职</a-select-option>
                 </a-select>
@@ -160,21 +171,8 @@ export default {
           </a-popover>
         }
       }, {
-        title: '状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag color="green">在职</a-tag>
-            case 2:
-              return <a-tag color="red">离职</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '车店编号',
-        dataIndex: 'shopCode',
+        title: '出生日期',
+        dataIndex: 'birthday',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -183,8 +181,38 @@ export default {
           }
         }
       }, {
-        title: '所属车店',
-        dataIndex: 'shopName',
+        title: '籍贯',
+        dataIndex: 'nativeAddress',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '身份证号码',
+        dataIndex: 'idCard',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '所属部门',
+        dataIndex: 'deptName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '岗位',
+        dataIndex: 'positionName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

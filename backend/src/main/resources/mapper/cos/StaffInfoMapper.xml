@@ -10,7 +10,7 @@
         si.name,
         si.sex,
         si.birthday,
-        si.native,
+        si.nativeAddress,
         si.id_card,
         si.images,
         si.diploma,

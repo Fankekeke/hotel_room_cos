@@ -24,9 +24,20 @@ public class OrderInfoController {
     private final IOrderInfoService orderInfoService;
 
     /**
+     * 查询可预约房间
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @return 结果
+     */
+    public R selectReserveRoom(String startDate, String endDate) {
+        return R.ok();
+    }
+
+    /**
      * 分页获取订单信息
      *
-     * @param page          分页对象
+     * @param page      分页对象
      * @param orderInfo 订单信息
      * @return 结果
      */
@@ -53,7 +64,7 @@ public class OrderInfoController {
      */
     @GetMapping("/detail/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(orderInfoService.getById(id));
+        return R.ok(orderInfoService.selectDetailById(id));
     }
 
     /**
@@ -63,9 +74,9 @@ public class OrderInfoController {
      * @return 结果
      */
     @PostMapping
-    public R save(OrderInfo orderInfo) {
+    public R save(OrderInfo orderInfo) throws Exception {
         orderInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(orderInfoService.save(orderInfo));
+        return R.ok(orderInfoService.orderSave(orderInfo));
     }
 
     /**

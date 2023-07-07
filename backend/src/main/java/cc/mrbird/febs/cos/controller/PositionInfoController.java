@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.PositionInfo;
 import cc.mrbird.febs.cos.service.IPositionInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class PositionInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(positionInfoService.list());
+        return R.ok(positionInfoService.list(Wrappers.<PositionInfo>lambdaQuery().eq(PositionInfo::getDelFlag, 0)));
     }
 
     /**

@@ -57,6 +57,11 @@ public class OrderInfo implements Serializable {
     private BigDecimal totalPrice;
 
     /**
+     * 入住天数
+     */
+    private Integer days;
+
+    /**
      * 所属用户
      */
     private Integer userId;

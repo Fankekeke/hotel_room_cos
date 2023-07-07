@@ -19,16 +19,6 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='所属车店' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'deptId',
-              { rules: [{ required: true, message: '请输入所属车店!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in shopList" :key="index">{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
           <a-form-item label='员工性别' v-bind="formItemLayout">
             <a-select v-decorator="[
               'sex',
@@ -40,18 +30,85 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='在职状态' v-bind="formItemLayout">
-            <a-radio-group button-style="solid" v-decorator="[
-              'status',
-              { rules: [{ required: true, message: '请输入在职状态!' }] }
+          <a-form-item label='出生日期' v-bind="formItemLayout">
+            <a-date-picker v-decorator="[
+            'birthday',
+            { rules: [{ required: true, message: '请输入出生日期!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='籍 贯' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'nativeAddress'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='身份证号码' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'idCard'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='学历' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'diploma'
               ]">
-              <a-radio-button value="1">
-                在职
-              </a-radio-button>
-              <a-radio-button value="2">
-                离职
-              </a-radio-button>
-            </a-radio-group>
+              <a-select-option value="1">高中</a-select-option>
+              <a-select-option value="2">专科</a-select-option>
+              <a-select-option value="3">本科</a-select-option>
+              <a-select-option value="4">硕士</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='学校名称' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'schoolName'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='家庭住址' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'address'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='邮 箱' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'mail'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='联系方式' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'phone'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='所属部门' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'deptId',
+              { rules: [{ required: true, message: '请输入所属部门!' }] }
+              ]">
+              <a-select-option :value="item.id" v-for="(item, index) in deptList" :key="index">{{ item.deptName }}</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='所属岗位' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'positionId',
+              { rules: [{ required: true, message: '请输入所属岗位!' }] }
+              ]">
+              <a-select-option :value="item.id" v-for="(item, index) in positionList" :key="index">{{ item.name }}</a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="24">
@@ -123,16 +180,23 @@ export default {
       previewVisible: false,
       previewImage: '',
       pharmacyList: [],
-      shopList: []
+      deptList: [],
+      positionList: []
     }
   },
   mounted () {
-    this.selectShopList()
+    this.selectDeptList()
+    this.selectPositionList()
   },
   methods: {
-    selectShopList () {
-      this.$get(`/cos/shop-info/datalist`).then((r) => {
-        this.shopList = r.data.data
+    selectDeptList () {
+      this.$get(`/cos/dept-info/list`).then((r) => {
+        this.deptList = r.data.data
+      })
+    },
+    selectPositionList () {
+      this.$get(`/cos/position-info/list`).then((r) => {
+        this.positionList = r.data.data
       })
     },
     handleCancel () {
@@ -163,6 +227,9 @@ export default {
         this.fileList.forEach(image => {
           images.push(image.response)
         })
+        if (values.birthday) {
+          values.birthday = moment(values.birthday).format('YYYY-MM-DD')
+        }
         if (!err) {
           values.images = images.length > 0 ? images.join(',') : null
           this.loading = true

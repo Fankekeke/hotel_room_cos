@@ -16,9 +16,35 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     /**
      * 分页获取订单信息
      *
-     * @param page          分页对象
+     * @param page      分页对象
      * @param orderInfo 订单信息
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectOrderPage(Page<OrderInfo> page, OrderInfo orderInfo);
+
+    /**
+     * 添加订单
+     *
+     * @param orderInfo 订单信息
+     * @return 结果
+     * @throws Exception 异常
+     */
+    boolean orderSave(OrderInfo orderInfo) throws Exception;
+
+    /**
+     * 获取订单详情
+     *
+     * @param id 订单ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectDetailById(Integer id);
+
+    /**
+     * 查询可预约房间
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectReserveRoom(String startDate, String endDate);
 }

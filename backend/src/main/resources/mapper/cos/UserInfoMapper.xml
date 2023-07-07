@@ -23,8 +23,8 @@
         <if test="userInfo.name != null and userInfo.name != ''">
             AND name LIKE CONCAT('%',#{userInfo.name},'%')
         </if>
-        <if test="userInfo.idCard != null and userInfo.idCard != ''">
-            AND id_card LIKE CONCAT('%',#{userInfo.idCard},'%')
+        <if test="userInfo.phone != null and userInfo.phone != ''">
+            AND phone LIKE CONCAT('%',#{userInfo.phone},'%')
         </if>
         order by
         create_date desc

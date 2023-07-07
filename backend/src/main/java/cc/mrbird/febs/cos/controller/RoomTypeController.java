@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.RoomType;
 import cc.mrbird.febs.cos.service.IRoomTypeService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class RoomTypeController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(roomTypeService.list());
+        return R.ok(roomTypeService.list(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, 0)));
     }
 
     /**

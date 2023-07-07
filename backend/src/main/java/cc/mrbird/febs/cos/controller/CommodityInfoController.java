@@ -44,7 +44,7 @@ public class CommodityInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(commodityInfoService.list());
+        return R.ok(commodityInfoService.list(Wrappers.<CommodityInfo>lambdaQuery().eq(CommodityInfo::getDelFlag, 0)));
     }
 
     /**

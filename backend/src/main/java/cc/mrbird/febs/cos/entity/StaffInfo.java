@@ -48,7 +48,7 @@ public class StaffInfo implements Serializable {
     /**
      * 籍贯
      */
-    private String nativeAddres;
+    private String nativeAddress;
 
     /**
      * 身份证号码
