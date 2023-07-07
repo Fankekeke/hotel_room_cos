@@ -66,6 +66,7 @@ public class PositionInfoController {
     @PostMapping
     public R save(PositionInfo positionInfo) {
         positionInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        positionInfo.setCode("POS-" + System.currentTimeMillis());
         return R.ok(positionInfoService.save(positionInfo));
     }
 

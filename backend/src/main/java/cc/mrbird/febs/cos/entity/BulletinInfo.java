@@ -49,4 +49,5 @@ public class BulletinInfo implements Serializable {
     private String publisher;
 
 
+    private String type;
 }

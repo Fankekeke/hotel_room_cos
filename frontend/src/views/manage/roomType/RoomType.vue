@@ -122,7 +122,7 @@ export default {
         dataIndex: 'code'
       }, {
         title: '类型名称',
-        dataIndex: 'name'
+        dataIndex: 'typeName'
       }, {
         title: '创建时间',
         dataIndex: 'createDate',
@@ -204,7 +204,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/roomType-info/' + ids).then(() => {
+          that.$delete('/cos/room-type/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -274,7 +274,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/roomType-info/page', {
+      this.$get('/cos/room-type/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

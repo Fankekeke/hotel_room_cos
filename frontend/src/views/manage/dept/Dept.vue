@@ -128,7 +128,7 @@ export default {
         dataIndex: 'createBy',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text
           } else {
             return '- -'
           }

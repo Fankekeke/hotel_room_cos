@@ -28,7 +28,7 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label='商品价格' v-bind="formItemLayout">
-            <a-input-number :min="0.1" v-decorator="[
+            <a-input-number style="width: 100%" :min="0.1" v-decorator="[
             'price',
             { rules: [{ required: true, message: '请输入商品价格!' }] }
             ]"/>
@@ -36,7 +36,7 @@
         </a-col>
          <a-col :span="12">
           <a-form-item label='当前库存' v-bind="formItemLayout">
-            <a-input-number :min="1" v-decorator="[
+            <a-input-number style="width: 100%" :min="1" v-decorator="[
             'stockNum',
             { rules: [{ required: true, message: '请输入当前库存!' }] }
             ]"/>
@@ -44,7 +44,7 @@
         </a-col>
         <a-col :span="24">
           <a-form-item label='备注' v-bind="formItemLayout">
-            <a-textarea :rows="24" v-decorator="[
+            <a-textarea :rows="6" v-decorator="[
             'remark',
              { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>

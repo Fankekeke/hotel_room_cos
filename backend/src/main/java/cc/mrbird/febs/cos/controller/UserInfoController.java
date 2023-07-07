@@ -65,6 +65,7 @@ public class UserInfoController {
     @PostMapping
     public R save(UserInfo userInfo) {
         userInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        userInfo.setCode("UR-" + System.currentTimeMillis());
         return R.ok(userInfoService.save(userInfo));
     }
 

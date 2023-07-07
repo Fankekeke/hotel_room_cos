@@ -66,6 +66,7 @@ public class DeptInfoController {
     @PostMapping
     public R save(DeptInfo deptInfo) {
         deptInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        deptInfo.setCode("DEP-" + System.currentTimeMillis());
         return R.ok(deptInfoService.save(deptInfo));
     }
 

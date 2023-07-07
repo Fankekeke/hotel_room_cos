@@ -67,6 +67,7 @@ public class RoomInfoController {
     @PostMapping
     public R save(RoomInfo roomInfo) {
         roomInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        roomInfo.setCode("ROM-" + System.currentTimeMillis());
         return R.ok(roomInfoService.save(roomInfo));
     }
 

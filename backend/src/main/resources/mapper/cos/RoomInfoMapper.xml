@@ -7,7 +7,6 @@
         select
         ri.id,
         ri.code,
-        ri.owner_id,
         ri.content,
         ri.images,
         ri.contact,

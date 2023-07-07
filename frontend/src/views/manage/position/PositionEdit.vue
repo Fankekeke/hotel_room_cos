@@ -28,7 +28,7 @@
         </a-col>
         <a-col :span="24">
           <a-form-item label='备注' v-bind="formItemLayout">
-            <a-textarea :rows="24" v-decorator="[
+            <a-textarea :rows="20" v-decorator="[
             'content',
              { rules: [{ required: true, message: '请输入备注!' }] }
             ]"/>

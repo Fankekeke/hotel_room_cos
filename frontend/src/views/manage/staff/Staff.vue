@@ -150,9 +150,9 @@ export default {
         dataIndex: 'sex',
         customRender: (text, row, index) => {
           switch (text) {
-            case 1:
+            case '1':
               return <a-tag>男</a-tag>
-            case 2:
+            case '2':
               return <a-tag>女</a-tag>
             default:
               return '- -'

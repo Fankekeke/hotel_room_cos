@@ -37,17 +37,6 @@
             </a-select>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='公告状态' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'rackUp',
-              { rules: [{ required: true, message: '请输入公告状态!' }] }
-              ]">
-              <a-select-option value="0">下架</a-select-option>
-              <a-select-option value="1">已发布</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
         <a-col :span="24">
           <a-form-item label='公告内容' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[

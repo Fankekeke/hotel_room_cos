@@ -31,11 +31,6 @@ public class RoomInfo implements Serializable {
     private String code;
 
     /**
-     * 业主编号
-     */
-    private Integer ownerId;
-
-    /**
      * 房间备注
      */
     private String content;
@@ -168,7 +163,7 @@ public class RoomInfo implements Serializable {
     /**
      * 删除标识
      */
-    private Integer delFlag;
+    private String delFlag;
 
 
 }

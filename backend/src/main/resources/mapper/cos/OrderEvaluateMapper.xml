@@ -31,9 +31,9 @@
         (ui.id = oe.user_id)
         where
         1 = 1
-        and del_flag = '0'
-        <if test="orderEvaluate.code != null and orderEvaluate.code != ''">
-            AND oe.order_code LIKE CONCAT('%',#{orderEvaluate.code},'%')
+        and oe.del_flag = '0'
+        <if test="orderEvaluate.orderCode != null and orderEvaluate.orderCode != ''">
+            AND oe.order_code LIKE CONCAT('%',#{orderEvaluate.orderCode},'%')
         </if>
         <if test="orderEvaluate.name != null and orderEvaluate.name != ''">
             AND ri.name LIKE CONCAT('%',#{orderEvaluate.name},'%')

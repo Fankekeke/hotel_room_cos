@@ -20,7 +20,7 @@
         </a-col>
         <a-col :span="24">
           <a-form-item label='备注' v-bind="formItemLayout">
-            <a-textarea :rows="24" v-decorator="[
+            <a-textarea :rows="10" v-decorator="[
             'remark',
              { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
@@ -122,7 +122,7 @@ export default {
     },
     setFormValues ({...roomType}) {
       this.rowId = roomType.id
-      let fields = ['name', 'price', 'stockNum', 'model', 'remark']
+      let fields = ['typeName', 'remark', 'images']
       let obj = {}
       Object.keys(roomType).forEach((key) => {
         if (key === 'images') {
@@ -159,7 +159,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/cos/roomType-info', {
+          this.$put('/cos/room-type', {
             ...values
           }).then((r) => {
             this.reset()

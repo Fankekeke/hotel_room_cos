@@ -20,7 +20,7 @@
         </a-col>
         <a-col :span="24">
           <a-form-item label='备注' v-bind="formItemLayout">
-            <a-textarea :rows="24" v-decorator="[
+            <a-textarea :rows="10" v-decorator="[
             'remark',
              { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
@@ -128,7 +128,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$post('/cos/roomType-info', {
+          this.$post('/cos/room-type', {
             ...values
           }).then((r) => {
             this.reset()

@@ -138,7 +138,7 @@ export default {
         scopedSlots: { customRender: 'contentShow' }
       }, {
         title: '发布时间',
-        dataIndex: 'createDate',
+        dataIndex: 'date',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -151,9 +151,9 @@ export default {
         dataIndex: 'type',
         customRender: (text, row, index) => {
           switch (text) {
-            case 1:
+            case '1':
               return <a-tag>上架</a-tag>
-            case 2:
+            case '2':
               return <a-tag>下架</a-tag>
             default:
               return '- -'

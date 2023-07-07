@@ -67,6 +67,7 @@ public class CommodityInfoController {
     @PostMapping
     public R save(CommodityInfo commodityInfo) {
         commodityInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        commodityInfo.setCode("COMM-" + System.currentTimeMillis());
         return R.ok(commodityInfoService.save(commodityInfo));
     }
 
