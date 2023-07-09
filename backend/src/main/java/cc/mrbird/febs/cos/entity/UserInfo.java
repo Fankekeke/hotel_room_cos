@@ -59,5 +59,11 @@ public class UserInfo implements Serializable {
      */
     private String createDate;
 
+    /**
+     * 所属账户
+     */
+    private Long userId;
+
+    private String images;
 
 }

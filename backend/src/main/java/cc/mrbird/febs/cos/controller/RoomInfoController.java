@@ -55,7 +55,7 @@ public class RoomInfoController {
      */
     @GetMapping("/detail/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(roomInfoService.getById(id));
+        return R.ok(roomInfoService.selectRoomDetail(id));
     }
 
     /**

@@ -60,6 +60,7 @@ public class OrderEvaluate implements Serializable {
     /**
      * 删除标识
      */
+    @TableLogic
     private String delFlag;
 
     @TableField(exist = false)

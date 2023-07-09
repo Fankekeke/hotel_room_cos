@@ -23,18 +23,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b51975f-5e37-45a1-bd9d-0f3c12f944d0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/views/manage/room/Rent.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/manage/room/RentAdd.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/manage/room/RentEdit.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/manage/room/RentView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/RoomInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/RoomInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/UserInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/UserInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/CommodityInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/CommodityInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/DeptInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/DeptInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/OrderEvaluate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/OrderEvaluate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/OrderInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/OrderInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/PositionInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/PositionInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/PurchaseRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/PurchaseRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/RoomInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/RoomInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/RoomType.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/RoomType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/StaffInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/StaffInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/mapper/cos/VehicleInfoMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/mapper/cos/VehicleInfoMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/UserInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/UserInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/IRoomInfoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/IRoomInfoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/RoomInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/RoomInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/domain/UserConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/domain/UserConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/mapper/cos/RoomInfoMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/mapper/cos/RoomInfoMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/shop/Shop.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/shop/Shop.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/staff/StaffEdit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/staff/StaffEdit.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicle/Vehicle.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicle/Vehicle.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicle/VehicleAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicle/VehicleAdd.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicle/VehicleEdit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicle/VehicleEdit.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicle/VehicleView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicle/VehicleView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicleType/VehicleType.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicleType/VehicleType.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicleType/VehicleTypeAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicleType/VehicleTypeAdd.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/manage/vehicleType/VehicleTypeEdit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/vehicleType/VehicleTypeEdit.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/login/Regist.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/Regist.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/manage/staff/Staff.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/manage/staff/Staff.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/user/personal/Personal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/user/personal/Personal.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +82,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/Project/租车系统/vehicle_rent/frontend/src/views/manage/shop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/Project/酒店客房管理系统/hotel_room_cos/frontend/src/views/manage/room&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -80,11 +94,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\Project\酒店客房管理系统\hotel_room_cos\frontend\src\views\manage\room" />
       <recent name="G:\Project\租车系统\vehicle_rent\frontend\src\views\manage\shop" />
       <recent name="G:\Project\租车系统\vehicle_rent\frontend\src\views\manage\Brand" />
       <recent name="G:\Project\药品销售平台\drug_sales\frontend\src\views\manage\inventory" />
       <recent name="G:\Project\药品销售平台\drug_sales\frontend\src\utils" />
-      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\utils" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -183,6 +197,9 @@
       <workItem from="1688174856441" duration="3751000" />
       <workItem from="1688180982325" duration="1492000" />
       <workItem from="1688259464817" duration="5684000" />
+      <workItem from="1688736579456" duration="6327000" />
+      <workItem from="1688775979557" duration="11664000" />
+      <workItem from="1688906831322" duration="1214000" />
     </task>
     <servers />
   </component>

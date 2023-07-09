@@ -7,38 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工姓名"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
+                label="出租标题"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.title"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工编号"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="所属部门"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.deptId" allowClear>
-                  <a-select-option :value="item.id" v-for="(item, index) in deptList" :key="index">{{ item.deptName }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="所属岗位"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.positionId" allowClear>
-                  <a-select-option :value="item.id" v-for="(item, index) in positionList" :key="index">{{ item.name }}</a-select-option>
-                </a-select>
+                label="房屋地址"
+                :labelCol="{span: 4}"
+                :wrapperCol="{span: 18, offset: 2}">
+                <a-input v-model="queryParams.address"/>
               </a-form-item>
             </a-col>
           </div>
@@ -66,6 +46,8 @@
                @change="handleTableChange">
         <template slot="titleShow" slot-scope="text, record">
           <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
             <a-tooltip>
               <template slot="title">
                 {{ record.title }}
@@ -74,45 +56,75 @@
             </a-tooltip>
           </template>
         </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.houseAddress }}
+              </template>
+              {{ record.houseAddress.slice(0, 10) }} ...
+            </a-tooltip>
+          </template>
+        </template>
+        <template slot="rentalRequestShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.rentalRequest }}
+              </template>
+              {{ record.rentalRequest.slice(0, 15) }} ...
+            </a-tooltip>
+          </template>
+        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-right: 10px"></a-icon>
+          <a-icon type="bulb" @click="view(record)" title="详 情"></a-icon>
         </template>
       </a-table>
     </div>
-    <staff-add
-      v-if="staffAdd.visiable"
-      @close="handlestaffAddClose"
-      @success="handlestaffAddSuccess"
-      :staffAddVisiable="staffAdd.visiable">
-    </staff-add>
-    <staff-edit
-      ref="staffEdit"
-      @close="handlestaffEditClose"
-      @success="handlestaffEditSuccess"
-      :staffEditVisiable="staffEdit.visiable">
-    </staff-edit>
+    <rent-add
+      v-if="rentAdd.visiable"
+      @close="handlerentAddClose"
+      @success="handlerentAddSuccess"
+      :rentAddVisiable="rentAdd.visiable">
+    </rent-add>
+    <rent-edit
+      ref="rentEdit"
+      @close="handlerentEditClose"
+      @success="handlerentEditSuccess"
+      :rentEditVisiable="rentEdit.visiable">
+    </rent-edit>
+    <rent-view :rentShow="rentView.visiable" :rentData="rentView.data" @close="rentView.visiable = false"></rent-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import staffAdd from './StaffAdd'
-import staffEdit from './StaffEdit'
+import rentAdd from './RentAdd'
+import rentEdit from './RentEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import RentView from './RentView'
 moment.locale('zh-cn')
-
 export default {
-  name: 'staff',
-  components: {staffAdd, staffEdit, RangeDate},
+  name: 'rent',
+  components: {RentView, rentAdd, rentEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      staffAdd: {
+      rentAdd: {
         visiable: false
       },
-      staffEdit: {
+      rentEdit: {
         visiable: false
+      },
+      rentView: {
+        visiable: false,
+        data: null
+      },
+      rentPushpin: {
+        visiable: false,
+        chargeId: ''
       },
       queryParams: {},
       filteredInfo: null,
@@ -129,8 +141,8 @@ export default {
         showSizeChanger: true,
         showTotal: (total, range) => `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`
       },
-      deptList: [],
-      positionList: []
+      userDrawer: false,
+      staff: null
     }
   },
   computed: {
@@ -139,26 +151,56 @@ export default {
     }),
     columns () {
       return [{
-        title: '员工姓名',
+        title: '房间号',
         dataIndex: 'name'
       }, {
-        title: '员工编号',
+        title: '房间编号',
         dataIndex: 'code'
       }, {
-        title: '性别',
-        dataIndex: 'sex',
+        title: '房间类型',
+        dataIndex: 'typeName'
+      }, {
+        title: '联系方式',
+        dataIndex: 'phone',
         customRender: (text, row, index) => {
-          switch (text) {
-            case '1':
-              return <a-tag>男</a-tag>
-            case '2':
-              return <a-tag>女</a-tag>
-            default:
-              return '- -'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
           }
         }
       }, {
-        title: '照片',
+        title: '负责人',
+        dataIndex: 'contact',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '价格/日',
+        dataIndex: 'rentPrice',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '房间大小',
+        dataIndex: 'roomSize',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '房屋照片',
         dataIndex: 'images',
         customRender: (text, record, index) => {
           if (!record.images) return <a-avatar shape="square" icon="user" />
@@ -170,48 +212,8 @@ export default {
           </a-popover>
         }
       }, {
-        title: '出生日期',
-        dataIndex: 'birthday',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '籍贯',
-        dataIndex: 'nativeAddress',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '身份证号码',
-        dataIndex: 'idCard',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '所属部门',
-        dataIndex: 'deptName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '岗位',
-        dataIndex: 'positionName',
+        title: '楼层',
+        dataIndex: 'floor',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -238,25 +240,28 @@ export default {
   },
   mounted () {
     this.fetch()
-    this.selectDeptList()
-    this.selectPositionList()
   },
   methods: {
-    selectDeptList () {
-      this.$get(`/cos/dept-info/list`).then((r) => {
-        this.deptList = r.data.data
-      })
+    handlerUserClosed () {
+      this.userDrawer = false
+      this.search()
     },
-    selectPositionList () {
-      this.$get(`/cos/position-info/list`).then((r) => {
-        this.positionList = r.data.data
-      })
+    rentPushpinClose () {
+      this.rentPushpin.visiable = false
+      this.search()
     },
-    editStatus (row, status) {
-      this.$post('/cos/staff-info/account/status', { staffId: row.id, status }).then((r) => {
-        this.$message.success('修改成功')
-        this.fetch()
-      })
+    rentPushpinSuccess () {
+      this.rentPushpin.visiable = false
+      this.$message.success('成功添加合同')
+      this.search()
+    },
+    checkStaff (rent) {
+      this.userDrawer = true
+      this.rentView.data = rent
+    },
+    pushpin (rent) {
+      this.rentPushpin.visiable = true
+      this.rentPushpin.chargeId = rent.chargeId
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -265,26 +270,39 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.staffAdd.visiable = true
+      this.rentAdd.visiable = true
     },
-    handlestaffAddClose () {
-      this.staffAdd.visiable = false
+    handlerentAddClose () {
+      this.rentAdd.visiable = false
     },
-    handlestaffAddSuccess () {
-      this.staffAdd.visiable = false
-      this.$message.success('新增员工成功')
+    handlerentAddSuccess () {
+      this.rentAdd.visiable = false
+      this.$message.success('新增房间信息成功')
       this.search()
     },
+    audit (rentId, status) {
+      this.$get(`/cos/rent-info/setStatus`, {
+        rentId,
+        status
+      }).then((r) => {
+        this.$message.success('更新状态成功')
+        this.search()
+      })
+    },
+    view (record) {
+      this.rentView.visiable = true
+      this.rentView.data = record
+    },
     edit (record) {
-      this.$refs.staffEdit.setFormValues(record)
-      this.staffEdit.visiable = true
+      this.$refs.rentEdit.setFormValues(record)
+      this.rentEdit.visiable = true
     },
-    handlestaffEditClose () {
-      this.staffEdit.visiable = false
+    handlerentEditClose () {
+      this.rentEdit.visiable = false
     },
-    handlestaffEditSuccess () {
-      this.staffEdit.visiable = false
-      this.$message.success('修改员工成功')
+    handlerentEditSuccess () {
+      this.rentEdit.visiable = false
+      this.$message.success('修改房间信息成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -302,7 +320,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/staff-info/' + ids).then(() => {
+          that.$delete('/cos/room-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -350,7 +368,6 @@ export default {
       this.paginationInfo = pagination
       this.filteredInfo = filters
       this.sortedInfo = sorter
-
       this.fetch({
         sortField: sorter.field,
         sortOrder: sorter.order,
@@ -372,13 +389,16 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.deptId === undefined) {
-        delete params.deptId
+      if (params.roomType === undefined) {
+        delete params.roomType
       }
-      if (params.positionId === undefined) {
-        delete params.positionId
+      if (params.flag === undefined) {
+        delete params.flag
       }
-      this.$get('/cos/staff-info/page', {
+      if (params.rentType === undefined) {
+        delete params.rentType
+      }
+      this.$get('/cos/room-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

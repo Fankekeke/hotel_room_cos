@@ -43,14 +43,14 @@
         where
         1 = 1
         and ri.del_flag = '0'
-        <if test="purchaseRecord.code != null and purchaseRecord.code != ''">
-            AND ri.code LIKE CONCAT('%',#{purchaseRecord.code},'%')
+        <if test="roomInfo.code != null and roomInfo.code != ''">
+            AND ri.code LIKE CONCAT('%',#{roomInfo.code},'%')
         </if>
-        <if test="purchaseRecord.type != null and purchaseRecord.type != ''">
-            AND ri.type = #{purchaseRecord.type}
+        <if test="roomInfo.type != null and roomInfo.type != ''">
+            AND ri.type = #{roomInfo.type}
         </if>
-        <if test="purchaseRecord.name != null and purchaseRecord.name != ''">
-            AND ri.name LIKE CONCAT('%',#{purchaseRecord.name},'%')
+        <if test="roomInfo.name != null and roomInfo.name != ''">
+            AND ri.name LIKE CONCAT('%',#{roomInfo.name},'%')
         </if>
         order by
         ri.create_date desc
