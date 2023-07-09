@@ -13,6 +13,7 @@
         pr.total_price,
         pr.status,
         ui.name,
+        ui.images,
         ui.id_card,
         ui.phone
         from

@@ -15,10 +15,18 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单状态"
+                label="房间号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.pharmacyName"/>
+                <a-input v-model="queryParams.name"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="用户名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.userName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -56,7 +64,6 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
-          <a-icon v-if="record.status == 2" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderComplete(record)" title="订单完成" style="margin-left: 15px"></a-icon>
           <a-icon v-if="record.status == 3 && record.evaluateId == null" type="pushpin" @click="handleorderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -146,24 +153,34 @@ export default {
           if (text !== null) {
             return text
           } else {
-            return <a-tag>平台内下单</a-tag>
+            return '- -'
           }
         }
       }, {
-        title: '头像',
-        dataIndex: 'userImages',
+        title: '房间图片',
+        dataIndex: 'images',
         customRender: (text, record, index) => {
-          if (!record.userImages) return <a-avatar shape="square" icon="user" />
+          if (!record.images) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
           </a-popover>
         }
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
+        title: '房间类型',
+        dataIndex: 'typeName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '房间号',
+        dataIndex: 'name',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -173,7 +190,7 @@ export default {
         }
       }, {
         title: '订单总额',
-        dataIndex: 'amount',
+        dataIndex: 'totalPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text + '元'
@@ -182,8 +199,8 @@ export default {
           }
         }
       }, {
-        title: '初始地址',
-        dataIndex: 'startAddress',
+        title: '入住地址',
+        dataIndex: 'startDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -192,8 +209,8 @@ export default {
           }
         }
       }, {
-        title: '运货地址',
-        dataIndex: 'endAddress',
+        title: '离开地址',
+        dataIndex: 'endDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -203,17 +220,13 @@ export default {
         }
       }, {
         title: '订单状态',
-        dataIndex: 'status',
+        dataIndex: 'orderStatus',
         customRender: (text, row, index) => {
           switch (text) {
-            case 0:
+            case '0':
               return <a-tag>待付款</a-tag>
-            case 1:
-              return <a-tag>正在分配</a-tag>
-            case 2:
-              return <a-tag>运输中</a-tag>
-            case 3:
-              return <a-tag>运输完成</a-tag>
+            case '1':
+              return <a-tag>已支付</a-tag>
             default:
               return '- -'
           }

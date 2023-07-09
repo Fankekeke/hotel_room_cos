@@ -20,7 +20,7 @@
         oi.recede_flag,
         ri.name,
         rt.type_name,
-        rt.images,
+        ri.images,
         ui.name as userName,
         ui.id_card
         from
@@ -30,10 +30,10 @@
         left join room_type rt on
         (rt.id = ri.`type`)
         left join user_info ui on
-        (ui.id = oe.user_id)
+        (ui.id = oi.user_id)
         where
         1 = 1
-        and del_flag = '0'
+        and oi.del_flag = '0'
         <if test="orderInfo.code != null and orderInfo.code != ''">
             AND oi.code LIKE CONCAT('%',#{orderInfo.code},'%')
         </if>

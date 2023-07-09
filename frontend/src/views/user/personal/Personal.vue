@@ -163,10 +163,13 @@ export default {
       return listData || []
     },
     getExpertInfo (userId) {
-      this.$get(`/cos/user-info/detail/${userId}`).then((r) => {
-        this.expertInfo = r.data.data
+      this.dataLoading = true
+      this.$get(`/cos/user-info/userInfo/detail/${userId}`).then((r) => {
+        this.expertInfo = r.data.user
         console.log(this.expertInfo)
         this.setFormValues(this.expertInfo)
+        this.courseInfo = r.data.order
+        this.dataLoading = false
       })
     },
     handleCancel () {
@@ -193,7 +196,7 @@ export default {
     },
     setFormValues ({...expert}) {
       this.rowId = expert.id
-      let fields = ['name', 'phone', 'sex', 'mail', 'images']
+      let fields = ['code', 'name', 'phone', 'sex', 'mail', 'images', 'idCard', 'createDate']
       let obj = {}
       Object.keys(expert).forEach((key) => {
         if (key === 'images') {
