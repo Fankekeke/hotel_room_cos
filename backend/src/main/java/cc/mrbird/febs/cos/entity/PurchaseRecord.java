@@ -54,9 +54,14 @@ public class PurchaseRecord implements Serializable {
     private BigDecimal totalPrice;
 
     /**
-     * 状态（1.已支付 2.退款中 3.已退货）
+     * 状态（1.已支付 2.退款中 3.已退货 4.驳回）
      */
     private String status;
+
+    /**
+     * 驳回原因
+     */
+    private String rejectReason;
 
     @TableField(exist = false)
     private String userName;

@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -208,6 +209,31 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<LinkedHashMap<String, Object>> goods = purchaseRecordMapper.selectGoodsByRecordCode(record.getRecordCode());
         result.put("goods", goods);
         return result;
+    }
+
+    /**
+     * 统计房间当前状态
+     *
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectRoomStatus() {
+        // 当前所有房间信息
+        List<RoomInfo> roomList = roomInfoMapper.selectList(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, "0"));
+        // 所有订单信息
+        List<OrderInfo> orderList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getDelFlag, "0"));
+        Map<String, List<OrderInfo>> orderMap = orderList.stream().collect(Collectors.groupingBy(OrderInfo::getRoomCode));
+
+        for (RoomInfo room : roomList) {
+            // 此房间的订单信息
+            List<OrderInfo> orderRoomList = orderMap.get(room.getCode());
+            if (CollectionUtil.isEmpty(orderRoomList)) {
+                room.setCheckStatus(false);
+                continue;
+            }
+//            room.setCheckStatus(orderRoomList.stream().anyMatch(e -> ));
+        }
+        return null;
     }
 
     /**

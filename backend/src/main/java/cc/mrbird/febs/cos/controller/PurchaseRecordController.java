@@ -26,13 +26,24 @@ public class PurchaseRecordController {
     /**
      * 分页获取采购物品信息
      *
-     * @param page          分页对象
+     * @param page           分页对象
      * @param purchaseRecord 采购物品信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<PurchaseRecord> page, PurchaseRecord purchaseRecord) {
         return R.ok(purchaseRecordService.selectRecordPage(page, purchaseRecord));
+    }
+
+    /**
+     * 退货审核
+     *
+     * @param purchaseRecord 采购物品
+     * @return 结果
+     */
+    @PostMapping("/audit")
+    public R purchaseReturn(PurchaseRecord purchaseRecord) {
+        return R.ok(purchaseRecordService.purchaseReturn(purchaseRecord));
     }
 
     /**

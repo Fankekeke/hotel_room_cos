@@ -58,6 +58,13 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     LinkedHashMap<String, Object> selectRecordDetail(Integer recordId);
 
     /**
+     * 统计房间当前状态
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectRoomStatus();
+
+    /**
      * 获取主页统计数据
      *
      * @return 结果

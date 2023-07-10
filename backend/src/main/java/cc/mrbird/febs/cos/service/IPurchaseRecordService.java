@@ -21,4 +21,12 @@ public interface IPurchaseRecordService extends IService<PurchaseRecord> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectRecordPage(Page<PurchaseRecord> page, PurchaseRecord purchaseRecord);
+
+    /**
+     * 退货审核
+     *
+     * @param purchaseRecord 采购物品
+     * @return 结果
+     */
+    boolean purchaseReturn(PurchaseRecord purchaseRecord);
 }
