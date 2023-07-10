@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="评价详情" @cancel="onClose" :width="1200">
+  <a-modal v-model="show" title="商品购买详情" @cancel="onClose" :width="1200">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -7,104 +7,40 @@
     </template>
     <div style="font-size: 13px;font-family: SimHei" v-if="evaluateInfo !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">评价信息</span></a-col>
-        <a-col :span="6"><b>评价得分：</b>
-          {{ evaluateInfo.score }}
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基本信息</span></a-col>
+        <a-col :span="8"><b>采购单号：</b>
+          {{ evaluateInfo.recordCode }}
         </a-col>
-        <a-col :span="18"><b>评价备注：</b>
-          {{ evaluateInfo.remark ? evaluateInfo.remark : '- -' }}
+        <a-col :span="8"><b>总金额：</b>
+          {{ evaluateInfo.totalPrice ? evaluateInfo.totalPrice : '- -' }}
         </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">图册</span></a-col>
-        <a-col :span="24">
-          <a-upload
-            name="avatar"
-            action="http://127.0.0.1:9527/file/fileUpload/"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handlePreview"
-            @change="picHandleChange"
-          >
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage" />
-          </a-modal>
-        </a-col>
-      </a-row>
-    </div>
-    <div style="font-size: 13px;font-family: SimHei" v-if="userInfo !== null">
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">评价用户</span></a-col>
-        <a-col :span="6"><b>用户姓名：</b>
-          {{ userInfo.name }}
-        </a-col>
-        <a-col :span="6"><b>联系电话：</b>
-          {{ userInfo.phone ? userInfo.phone : '- -' }}
-        </a-col>
-        <a-col :span="6"><b>会员编号：</b>
-          {{ userInfo.code ? userInfo.code : '- -' }}
-        </a-col>
-      </a-row>
-    </div>
-    <div style="font-size: 13px;font-family: SimHei" v-if="vehicleInfo !== null">
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">车辆信息</span></a-col>
-        <a-col :span="6"><b>车辆编号：</b>
-          {{ vehicleInfo.vehicleNo }}
-        </a-col>
-        <a-col :span="6"><b>车牌号：</b>
-          {{ vehicleInfo.vehicleNumber ? vehicleInfo.vehicleNumber : '- -' }}
-        </a-col>
-        <a-col :span="6"><b>车辆颜色：</b>
-          {{ vehicleInfo.vehicleColor ? vehicleInfo.vehicleColor : '- -' }}
-        </a-col>
-        <a-col :span="6"><b>车辆名称：</b>
-          {{ vehicleInfo.name }}
+        <a-col :span="8"><b>订单状态：</b>
+          <span v-if="evaluateInfo.status == 1">已支付</span>
+          <span v-if="evaluateInfo.status == 2">退款中</span>
+          <span v-if="evaluateInfo.status == 3">已退货</span>
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="6"><b>载客数量：</b>
-          {{ vehicleInfo.carryPassengers }}
+        <a-col :span="8"><b>购买用户：</b>
+          {{ evaluateInfo.name }}
         </a-col>
-        <a-col :span="6"><b>发动机号码：</b>
-          {{ vehicleInfo.engineNo }}
+        <a-col :span="8"><b>身份证号码：</b>
+          {{ evaluateInfo.idCard ? evaluateInfo.idCard : '- -' }}
         </a-col>
-        <a-col :span="6"><b>车辆状态：</b>
-          <span v-if="vehicleInfo.status == 0" style="color: red">空闲</span>
-          <span v-if="vehicleInfo.status == 1" style="color: green">使用中</span>
-          <span v-if="vehicleInfo.status == 2" style="color: green">维修中</span>
-          <span v-if="vehicleInfo.status == 3" style="color: green">已报废</span>
-        </a-col>
-        <a-col :span="6"><b>负责人：</b>
-          {{ vehicleInfo.principal }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">  
-        <a-col :span="6"><b>联系电话：</b>
-          {{ vehicleInfo.phone }}
-        </a-col>
-        <a-col :span="6"><b>出厂日期：</b>
-          {{ vehicleInfo.factoryDate }}
-        </a-col>
-        <a-col :span="6"><b>排放标准：</b>
-          {{ vehicleInfo.emissionStandard }}
-        </a-col>
-        <a-col :span="6"><b>燃料类型：</b>
-          <span v-if="vehicleInfo.fuelType == 1" style="color: green">燃油</span>
-          <span v-if="vehicleInfo.fuelType == 2" style="color: green">柴油</span>
-          <span v-if="vehicleInfo.fuelType == 3" style="color: green">油电混动</span>
-          <span v-if="vehicleInfo.fuelType == 4" style="color: green">电能</span>
-        </a-col>
-        <a-col :span="24"><b>备注：</b>
-          {{ vehicleInfo.content }}
+        <a-col :span="8"><b>联系方式：</b>
+          {{ evaluateInfo.phone ? evaluateInfo.phone : '- -' }}
         </a-col>
       </a-row>
       <br/>
     </div>
+    <a-row style="padding-left: 24px;padding-right: 24px;">
+      <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">购买信息</span></a-col>
+       <a-col :span="24">
+        <a-table :columns="columns" :data-source="goodsList">
+        </a-table>
+      </a-col>
+    </a-row>
   </a-modal>
 </template>
 
@@ -138,6 +74,33 @@ export default {
       },
       set: function () {
       }
+    },
+    columns () {
+      return [{
+        title: '商品名称',
+        dataIndex: 'name'
+      }, {
+        title: '规格',
+        dataIndex: 'model'
+      }, {
+        title: '数量',
+        dataIndex: 'outNum'
+      }, {
+        title: '商品图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '价格',
+        dataIndex: 'itemPrice'
+      }]
     }
   },
   data () {
@@ -148,12 +111,9 @@ export default {
       previewImage: '',
       repairInfo: null,
       reserveInfo: null,
-      durgList: [],
+      goodsList: [],
       logisticsList: [],
-      userInfo: null,
-      vehicleInfo: null,
-      orderInfo: null,
-      evaluateInfo: null
+      recordInfo: null,
     }
   },
   watch: {
@@ -165,12 +125,9 @@ export default {
   },
   methods: {
     dataInit (id) {
-      this.$get(`/cos/vehicle-info/evaluate/detail/${id}`).then((r) => {
-        this.userInfo = r.data.user
-        this.orderInfo = r.data.order
-        this.vehicleInfo = r.data.vehicle
-        this.evaluateInfo = r.data.evaluate
-        this.imagesInit(this.evaluateInfo.images)
+      this.$get(`/cos/order-info/record/detail/${id}`).then((r) => {
+        this.goodsList = r.data.goods
+        this.recordInfo = r.data.record
       })
     },
     local (evaluateData) {

@@ -41,6 +41,9 @@
         <if test="orderEvaluate.userName != null and orderEvaluate.userName != ''">
             AND ui.name LIKE CONCAT('%',#{orderEvaluate.userName},'%')
         </if>
+        <if test="orderEvaluate.userId != null and orderEvaluate.userId != ''">
+            AND ui.user_id = #{orderEvaluate.userId}
+        </if>
         order by
         oe.create_date desc
     </select>

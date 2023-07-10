@@ -46,7 +46,97 @@
         <if test="orderInfo.userName != null and orderInfo.userName != ''">
             AND ui.name LIKE CONCAT('%',#{orderInfo.userName},'%')
         </if>
+        <if test="orderInfo.userId != null and orderInfo.userId != ''">
+            AND ui.user_id = #{orderInfo.userId}
+        </if>
         order by
         oi.create_date desc
+    </select>
+
+    <!-- 根据日期获取订单信息 -->
+    <select id="selectOrderByDate" resultType="cc.mrbird.febs.cos.entity.OrderInfo">
+        select oi.*,
+        DATE_FORMAT(oi.create_date, '%Y') AS year,
+        DATE_FORMAT(oi.create_date, '%c') AS month
+        from order_info oi where
+        1 = 1
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT(oi.create_date, '%Y') = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT(oi.create_date, '%c') = #{month}
+        </if>
+    </select>
+
+    <!-- 近十天收益统计 -->
+    <select id="selectPriceByDay" resultType="java.util.LinkedHashMap">
+        SELECT
+        DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+        IFNULL(SUM(oi.total_price), 0) AS price
+        FROM
+        (
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+        LEFT JOIN order_info oi ON (
+        DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
+        )
+        GROUP BY
+        days
+        ORDER BY
+        days ASC
+    </select>
+
+    <!-- 近十天工单统计 -->
+    <select id="selectOrderNumByDay" resultType="java.util.LinkedHashMap">
+        SELECT
+        DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+        IFNULL(COUNT(oi.id), 0) AS count
+        FROM
+        (
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+        LEFT JOIN order_info oi ON (
+        DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
+        )
+        GROUP BY
+        days
+        ORDER BY
+        days ASC
     </select>
 </mapper>

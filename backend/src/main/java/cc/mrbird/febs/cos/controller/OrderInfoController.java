@@ -30,8 +30,30 @@ public class OrderInfoController {
      * @param endDate   结束时间
      * @return 结果
      */
+    @GetMapping("/reserve/room")
     public R selectReserveRoom(String startDate, String endDate) {
-        return R.ok();
+        return R.ok(orderInfoService.selectReserveRoom(startDate, endDate));
+    }
+
+    /**
+     * 获取采购详情
+     *
+     * @param recordId 记录ID
+     * @return 结果
+     */
+    @GetMapping("/record/detail/{recordId}")
+    public R selectRecordDetail(@PathVariable("recordId") Integer recordId) {
+        return R.ok(orderInfoService.selectRecordDetail(recordId));
+    }
+
+    /**
+     * 获取主页统计数据
+     *
+     * @return 结果
+     */
+    @GetMapping("/home/data")
+    public R selectHomeData() {
+        return R.ok(orderInfoService.selectHomeData());
     }
 
     /**

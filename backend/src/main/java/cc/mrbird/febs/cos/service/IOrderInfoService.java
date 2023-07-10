@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -46,5 +47,20 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param endDate   结束时间
      * @return 结果
      */
-    LinkedHashMap<String, Object> selectReserveRoom(String startDate, String endDate);
+    List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate);
+
+    /**
+     * 获取采购详情
+     *
+     * @param recordId 记录ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectRecordDetail(Integer recordId);
+
+    /**
+     * 获取主页统计数据
+     *
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectHomeData();
 }

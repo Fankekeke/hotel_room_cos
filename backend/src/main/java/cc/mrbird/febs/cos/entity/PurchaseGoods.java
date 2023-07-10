@@ -44,5 +44,4 @@ public class PurchaseGoods implements Serializable {
      */
     private BigDecimal itemPrice;
 
-
 }

@@ -63,6 +63,7 @@
         </template>
       </a-table>
     </div>
+    <rent-view :evaluateShow="rentView.visiable" :evaluateData="rentView.data" @close="rentView.visiable = false"></rent-view>
   </a-card>
 </template>
 
@@ -70,11 +71,12 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import RentView from './RentView'
 moment.locale('zh-cn')
 
 export default {
   name: 'evaluate',
-  components: {RangeDate},
+  components: {RangeDate, RentView},
   data () {
     return {
       advanced: false,
@@ -83,6 +85,10 @@ export default {
       },
       evaluateEdit: {
         visiable: false
+      },
+      rentView: {
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -179,6 +185,10 @@ export default {
     this.fetch()
   },
   methods: {
+    rentViewOpen (row) {
+      this.rentView.data = row
+      this.rentView.visiable = true
+    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -296,6 +306,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
+      params.userId = this.currentUser.userId
       this.$get('/cos/purchase-record/page', {
         ...params
       }).then((r) => {

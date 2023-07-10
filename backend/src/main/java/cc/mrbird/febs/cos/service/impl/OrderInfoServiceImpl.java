@@ -1,18 +1,14 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.common.exception.FebsException;
-import cc.mrbird.febs.cos.dao.RoomInfoMapper;
-import cc.mrbird.febs.cos.dao.RoomTypeMapper;
-import cc.mrbird.febs.cos.dao.UserInfoMapper;
-import cc.mrbird.febs.cos.entity.OrderInfo;
-import cc.mrbird.febs.cos.dao.OrderInfoMapper;
-import cc.mrbird.febs.cos.entity.RoomInfo;
-import cc.mrbird.febs.cos.entity.RoomType;
-import cc.mrbird.febs.cos.entity.UserInfo;
+import cc.mrbird.febs.cos.dao.*;
+import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.service.IOrderInfoService;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author FanK
@@ -38,7 +32,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     private final RoomInfoMapper roomInfoMapper;
 
+    private final PurchaseRecordMapper purchaseRecordMapper;
+
+    private final PurchaseGoodsMapper goodsMapper;
+
     private final RoomTypeMapper roomTypeMapper;
+
+    private final OrderInfoMapper orderInfoMapper;
+
+    private final BulletinInfoMapper bulletinInfoMapper;
 
     /**
      * 分页获取订单信息
@@ -53,7 +55,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     public static void main(String[] args) {
-        System.out.println(DateUtil.between(DateUtil.parseDate("2023-07-05"), DateUtil.parseDate("2023-07-05"), DateUnit.DAY));
+        System.out.println(DateUtil.between(DateUtil.parseDate("2023-07-05"), DateUtil.parseDate("2023-07-06"), DateUnit.DAY));
     }
 
     /**
@@ -132,17 +134,140 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return 结果
      */
     @Override
-    public LinkedHashMap<String, Object> selectReserveRoom(String startDate, String endDate) {
+    public List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate) {
         // 返回数据
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>(16);
+        List<LinkedHashMap<String, Object>> result = new ArrayList<>();
+
+        // 所有订单信息isOverlap
+        List<OrderInfo> orderList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getDelFlag, "0").eq(OrderInfo::getRecedeFlag, "0"));
+        Map<String, List<OrderInfo>> orderMap = orderList.stream().collect(Collectors.groupingBy(OrderInfo::getRoomCode));
 
         // 所有房间信息
         List<RoomInfo> roomList = roomInfoMapper.selectList(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, 0));
-        List<RoomInfo> checkRoomList = new ArrayList<>();
         // 所有房间类型
         List<RoomType> roomTypeList = roomTypeMapper.selectList(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, 0));
+        if (CollectionUtil.isEmpty(roomTypeList) || CollectionUtil.isEmpty(roomList)) {
+            return null;
+        }
+        // 房间按类型分组
+        Map<Integer, List<RoomInfo>> roomMap = roomList.stream().collect(Collectors.groupingBy(RoomInfo::getType));
 
+        for (RoomType roomType : roomTypeList) {
+            LinkedHashMap<String, Object> tempMap = new LinkedHashMap<String, Object>() {
+                {
+                    put("name", roomType.getTypeName());
+                    put("value", Collections.emptyList());
+                }
+            };
 
-        return null;
+            List<RoomInfo> checkRoomList = new ArrayList<>();
+            // 获取所属类型房间
+            List<RoomInfo> roomTempList = roomMap.get(roomType.getId());
+            if (CollectionUtil.isEmpty(roomTempList)) {
+                result.add(tempMap);
+                continue;
+            }
+            for (RoomInfo roomInfo : roomTempList) {
+                List<OrderInfo> orderTempList = orderMap.get(roomInfo.getCode());
+                if (CollectionUtil.isEmpty(orderTempList)) {
+                    checkRoomList.add(roomInfo);
+                    continue;
+                }
+                // 获取是否有订单存在选择时间内
+                boolean overlapCheck = orderTempList.stream().anyMatch(e -> DateUtil.isOverlap(DateUtil.parseDate(e.getStartDate()), DateUtil.parseDate(e.getEndDate()), DateUtil.parseDate(startDate), DateUtil.parseDate(endDate)));
+                if (overlapCheck) {
+                    continue;
+                }
+                checkRoomList.add(roomInfo);
+            }
+            tempMap.put("value", checkRoomList);
+            result.add(tempMap);
+        }
+        return result;
+    }
+
+    /**
+     * 获取采购详情
+     *
+     * @param recordId 记录ID
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectRecordDetail(Integer recordId) {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("record", null);
+                put("goods", Collections.emptyList());
+            }
+        };
+        // 采购记录
+        PurchaseRecord record = purchaseRecordMapper.selectById(recordId);
+        result.put("record", record);
+        // 采购详情
+        List<LinkedHashMap<String, Object>> goods = purchaseRecordMapper.selectGoodsByRecordCode(record.getRecordCode());
+        result.put("goods", goods);
+        return result;
+    }
+
+    /**
+     * 获取主页统计数据
+     *
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectHomeData() {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("monthOrderNum", 0);
+                put("monthOrderTotal", 0);
+                put("yearOrderNum", 0);
+                put("yearOrderTotal", 0);
+            }
+        };
+
+        // 获取当前月份及当前月份
+        String year = StrUtil.toString(DateUtil.year(new Date()));
+        String month = StrUtil.toString(DateUtil.month(new Date()));
+
+        // 本年订单
+        List<OrderInfo> orderList = baseMapper.selectOrderByDate(year, null);
+        Map<String, List<OrderInfo>> orderMap = orderList.stream().collect(Collectors.groupingBy(OrderInfo::getMonth));
+        // 本年购买记录
+        List<PurchaseRecord> recordList = purchaseRecordMapper.selectOrderByDate(year, null);
+        Map<String, List<PurchaseRecord>> recordMap = recordList.stream().collect(Collectors.groupingBy(PurchaseRecord::getMonth));
+
+        // 本月订单量
+        int orderMonthCount = CollectionUtil.isEmpty(orderMap.get(month)) ? 0 : orderMap.get(month).size();
+        int recordMonthCount = CollectionUtil.isEmpty(recordMap.get(month)) ? 0 : recordMap.get(month).size();
+        result.put("monthOrderNum", orderMonthCount + recordMonthCount);
+
+        // 本月收益
+        BigDecimal orderMonthTotal = CollectionUtil.isEmpty(orderMap.get(month)) ? BigDecimal.ZERO : orderMap.get(month).stream().map(OrderInfo::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal recordMonthTotal = CollectionUtil.isEmpty(recordMap.get(month)) ? BigDecimal.ZERO : recordMap.get(month).stream().map(PurchaseRecord::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        result.put("monthOrderTotal", orderMonthTotal.add(recordMonthTotal));
+
+        // 本年订单量
+        Integer orderYearCount = CollectionUtil.isEmpty(orderList) ? 0 : orderList.size();
+        Integer recordYearCount = CollectionUtil.isEmpty(recordList) ? 0 :recordList.size();
+        result.put("yearOrderNum", orderYearCount + recordYearCount);
+
+        // 本年收益
+        BigDecimal orderYearTotal = CollectionUtil.isEmpty(orderList) ? BigDecimal.ZERO : orderList.stream().map(OrderInfo::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal recordYearTotal = CollectionUtil.isEmpty(recordList) ? BigDecimal.ZERO : recordList.stream().map(PurchaseRecord::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        result.put("yearOrderTotal", orderYearTotal.add(recordYearTotal));
+
+        // 近十天内收入统计
+        List<LinkedHashMap<String, Object>> priceDay = baseMapper.selectPriceByDay();
+        result.put("priceDay", priceDay);
+
+        // 近十天内工单统计
+        List<LinkedHashMap<String, Object>> orderNumDay = baseMapper.selectOrderNumByDay();
+        result.put("orderNumDay", orderNumDay);
+
+        // 公告信息
+        result.put("bulletin", bulletinInfoMapper.selectList(Wrappers.<BulletinInfo>lambdaQuery()));
+        return result;
     }
 }

@@ -32,7 +32,45 @@
         <if test="purchaseRecord.userName != null and purchaseRecord.userName != ''">
             AND ui.name LIKE CONCAT('%',#{purchaseRecord.userName},'%')
         </if>
+        <if test="purchaseRecord.userId != null and purchaseRecord.userId != ''">
+            AND ui.user_id = #{purchaseRecord.userId}
+        </if>
         order by
         pr.create_date desc
+    </select>
+
+    <!-- 根据日期获取采购订单 -->
+    <select id="selectOrderByDate" resultType="cc.mrbird.febs.cos.entity.PurchaseRecord">
+        select pr.*,
+        DATE_FORMAT(pr.create_date, '%Y') AS year,
+        DATE_FORMAT(pr.create_date, '%c') AS month
+        from purchase_record pr where
+        1 = 1
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT(pr.create_date, '%Y') = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT(pr.create_date, '%c') = #{month}
+        </if>
+    </select>
+
+    <!-- 根据记录编号获取采购物品 -->
+    <select id="selectGoodsByRecordCode" resultType="java.util.LinkedHashMap">
+        select
+        pg.id,
+        pg.purchase_code,
+        pg.commodity_id,
+        pg.out_num,
+        pg.item_price,
+        ci.name,
+        ci.model,
+        ci.images
+        from
+        purchase_goods pg
+        left join commodity_info ci on
+        (ci.id = pg.commodity_id)
+        where
+        1 = 1
+        and pg.purchase_code = #{ recordCode }
     </select>
 </mapper>
