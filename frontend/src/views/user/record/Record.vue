@@ -63,7 +63,7 @@
         </template>
       </a-table>
     </div>
-    <rent-view :evaluateShow="rentView.visiable" :evaluateData="rentView.data" @close="rentView.visiable = false"></rent-view>
+    <record-view :evaluateShow="rentView.visiable" :evaluateData="rentView.data" @close="rentView.visiable = false"></record-view>
   </a-card>
 </template>
 
@@ -71,12 +71,12 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import RentView from './RentView'
+import RecordView from './RecordView.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'evaluate',
-  components: {RangeDate, RentView},
+  components: {RangeDate, RecordView},
   data () {
     return {
       advanced: false,
