@@ -36,6 +36,18 @@ public class OrderInfoController {
     }
 
     /**
+     * 数据统计
+     *
+     * @param checkDate 选择日期
+     * @param typeId    房间类型
+     * @return 结果
+     */
+    @GetMapping("/statistics")
+    public R selectRoomStatistics(@RequestParam("checkDate") String checkDate, @RequestParam(value = "typeId", required = false) Integer typeId) {
+        return R.ok();
+    }
+
+    /**
      * 统计房间当前状态
      *
      * @return 结果

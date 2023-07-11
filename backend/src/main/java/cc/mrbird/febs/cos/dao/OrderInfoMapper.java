@@ -45,4 +45,24 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectOrderNumByDay();
+
+    /**
+     * 按月统计收益统计
+     *
+     * @param year   年份
+     * @param month  月份
+     * @param typeId 房间类型
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectPriceByMonth(@Param("year") String year, @Param("month") String month, @Param("typeId") Integer typeId);
+
+    /**
+     * 按月统计工单统计
+     *
+     * @param year   年份
+     * @param month  月份
+     * @param typeId 房间类型
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderNumByMonth(@Param("year") String year, @Param("month") String month, @Param("typeId") Integer typeId);
 }

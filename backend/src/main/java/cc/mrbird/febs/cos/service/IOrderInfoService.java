@@ -51,6 +51,15 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate);
 
     /**
+     * 数据统计
+     *
+     * @param checkDate 选择日期
+     * @param typeId    房间类型
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectRoomStatistics(String checkDate, Integer typeId);
+
+    /**
      * 获取采购详情
      *
      * @param recordId 记录ID

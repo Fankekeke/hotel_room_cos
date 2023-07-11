@@ -188,6 +188,37 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     /**
+     * 数据统计
+     *
+     * @param checkDate 选择日期
+     * @param typeId    房间类型
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectRoomStatistics(String checkDate, Integer typeId) {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        // 获取当前月份及当前月份
+        String year = StrUtil.toString(DateUtil.year(DateUtil.parseDate(checkDate)));
+        String month = StrUtil.toString(DateUtil.month(DateUtil.parseDate(checkDate)));
+
+        // 本月收益
+        List<LinkedHashMap<String, Object>> priceByMonth = baseMapper.selectPriceByMonth(year, month, typeId);
+        result.put("priceByMonth", priceByMonth);
+
+        // 本月订单
+        List<LinkedHashMap<String, Object>> orderNumByMonth = baseMapper.selectOrderNumByMonth(year, month, typeId);
+        result.put("orderNumByMonth", orderNumByMonth);
+
+        // 房间类型统计
+        if (typeId != null) {
+
+        }
+        return result;
+    }
+
+    /**
      * 获取采购详情
      *
      * @param recordId 记录ID
