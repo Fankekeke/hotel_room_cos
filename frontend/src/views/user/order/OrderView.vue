@@ -153,15 +153,15 @@ export default {
   watch: {
     orderShow: function (value) {
       if (value) {
-        this.dataInit(this.orderData.code)
+        this.dataInit(this.orderData.id)
         this.imagesInit(this.orderData.images)
         this.current = this.orderData.status
       }
     }
   },
   methods: {
-    dataInit (orderCode) {
-      this.$get(`/cos/order-info/detail/${orderCode}`).then((r) => {
+    dataInit (id) {
+      this.$get(`/cos/order-info/detail/${id}`).then((r) => {
         this.userInfo = r.data.user
       })
     },

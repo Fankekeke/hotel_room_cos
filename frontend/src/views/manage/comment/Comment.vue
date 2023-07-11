@@ -226,7 +226,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/comment-info/' + ids).then(() => {
+          that.$delete('/cos/leave-comments/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -296,7 +296,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/comment-info/page', {
+      this.$get('/cos/leave-comments/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

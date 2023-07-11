@@ -20,7 +20,7 @@
         (ui.id = lc.user_id)
         where
         1 = 1
-        lc.del_flag = '0'
+        and lc.del_flag = '0'
         <if test="leaveComments.userName != null and leaveComments.userName != ''">
             AND ui.name LIKE CONCAT('%',#{leaveComments.userName},'%')
         </if>

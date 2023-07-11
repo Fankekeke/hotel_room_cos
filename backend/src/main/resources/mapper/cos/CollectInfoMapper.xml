@@ -36,6 +36,6 @@
             AND ui.name LIKE CONCAT('%',#{collectInfo.userName},'%')
         </if>
         order by
-        ci.create_date
+        ci.create_date desc
     </select>
 </mapper>

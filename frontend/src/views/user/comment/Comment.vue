@@ -153,12 +153,12 @@ export default {
         title: '图片',
         dataIndex: 'images',
         customRender: (text, record, index) => {
-          if (!record.userImages) return <a-avatar shape="square" icon="user" />
+          if (!record.images) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
           </a-popover>
         }
       }, {
@@ -226,7 +226,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/comment-info/' + ids).then(() => {
+          that.$delete('/cos/leave-comments/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -297,7 +297,7 @@ export default {
         params.current = this.pagination.defaultCurrent
       }
       params.userId = this.currentUser.userId
-      this.$get('/cos/comment-info/page', {
+      this.$get('/cos/leave-comments/page', {
         ...params
       }).then((r) => {
         let data = r.data.data
