@@ -217,23 +217,28 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return 结果
      */
     @Override
-    public List<LinkedHashMap<String, Object>> selectRoomStatus() {
+    public List<RoomInfo> selectRoomStatus() {
         // 当前所有房间信息
         List<RoomInfo> roomList = roomInfoMapper.selectList(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, "0"));
         // 所有订单信息
         List<OrderInfo> orderList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getDelFlag, "0"));
         Map<String, List<OrderInfo>> orderMap = orderList.stream().collect(Collectors.groupingBy(OrderInfo::getRoomCode));
 
+        // 房间类型
+        List<RoomType> typeList = roomTypeMapper.selectList(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, "0"));
+        Map<Integer, String> typeMap = typeList.stream().collect(Collectors.toMap(RoomType::getId, RoomType::getTypeName));
         for (RoomInfo room : roomList) {
+            // 房间类型
+            room.setTypeName(typeMap.get(room.getType()));
             // 此房间的订单信息
             List<OrderInfo> orderRoomList = orderMap.get(room.getCode());
             if (CollectionUtil.isEmpty(orderRoomList)) {
                 room.setCheckStatus(false);
                 continue;
             }
-//            room.setCheckStatus(orderRoomList.stream().anyMatch(e -> ));
+            room.setCheckStatus(orderRoomList.stream().anyMatch(e -> DateUtil.isIn(new Date(), DateUtil.parseDate(e.getStartDate()), DateUtil.parseDate(e.getEndDate()))));
         }
-        return null;
+        return roomList;
     }
 
     /**

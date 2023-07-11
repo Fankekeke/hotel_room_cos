@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.service;
 
 import cc.mrbird.febs.cos.entity.OrderInfo;
+import cc.mrbird.febs.cos.entity.RoomInfo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -62,7 +63,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      *
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> selectRoomStatus();
+    List<RoomInfo> selectRoomStatus();
 
     /**
      * 获取主页统计数据

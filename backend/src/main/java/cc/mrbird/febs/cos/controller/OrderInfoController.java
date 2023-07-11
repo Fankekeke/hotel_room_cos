@@ -36,6 +36,16 @@ public class OrderInfoController {
     }
 
     /**
+     * 统计房间当前状态
+     *
+     * @return 结果
+     */
+    @GetMapping("/room/status")
+    public R selectRoomStatus() {
+        return R.ok(orderInfoService.selectRoomStatus());
+    }
+
+    /**
      * 获取采购详情
      *
      * @param recordId 记录ID

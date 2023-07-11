@@ -171,4 +171,6 @@ public class RoomInfo implements Serializable {
     @TableField(exist = false)
     private boolean checkStatus;
 
+    @TableField(exist = false)
+    private String typeName;
 }
