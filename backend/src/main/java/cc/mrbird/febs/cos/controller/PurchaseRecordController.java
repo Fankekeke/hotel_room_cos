@@ -75,9 +75,7 @@ public class PurchaseRecordController {
      */
     @PostMapping
     public R save(PurchaseRecord purchaseRecord) {
-        purchaseRecord.setCreateDate(DateUtil.formatDateTime(new Date()));
-        purchaseRecord.setRecordCode("PRE-" + System.currentTimeMillis());
-        return R.ok(purchaseRecordService.save(purchaseRecord));
+        return R.ok(purchaseRecordService.purchaseSave(purchaseRecord));
     }
 
     /**

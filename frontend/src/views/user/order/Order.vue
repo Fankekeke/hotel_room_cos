@@ -64,7 +64,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
-          <a-icon v-if="record.status == 3 && record.evaluateId == null" type="pushpin" @click="handleorderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.orderStatus == 1 && record.recedeFlag == 0 && record.evaluateId == null" type="pushpin" @click="handleorderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -199,7 +199,7 @@ export default {
           }
         }
       }, {
-        title: '入住地址',
+        title: '入住时间',
         dataIndex: 'startDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -209,7 +209,7 @@ export default {
           }
         }
       }, {
-        title: '离开地址',
+        title: '离开时间',
         dataIndex: 'endDate',
         customRender: (text, row, index) => {
           if (text !== null) {

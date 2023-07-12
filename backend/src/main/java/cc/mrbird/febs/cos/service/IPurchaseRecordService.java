@@ -16,7 +16,7 @@ public interface IPurchaseRecordService extends IService<PurchaseRecord> {
     /**
      * 分页获取采购物品信息
      *
-     * @param page          分页对象
+     * @param page           分页对象
      * @param purchaseRecord 采购物品信息
      * @return 结果
      */
@@ -29,4 +29,12 @@ public interface IPurchaseRecordService extends IService<PurchaseRecord> {
      * @return 结果
      */
     boolean purchaseReturn(PurchaseRecord purchaseRecord);
+
+    /**
+     * 添加采购记录
+     *
+     * @param purchaseRecord 采购物品
+     * @return 结果
+     */
+    boolean purchaseSave(PurchaseRecord purchaseRecord);
 }

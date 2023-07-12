@@ -27,6 +27,9 @@
         <if test="leaveComments.status != null and leaveComments.status != ''">
             AND lc.status = #{leaveComments.status}
         </if>
+        <if test="leaveComments.userId != null and leaveComments.userId != ''">
+            AND ui.user_id = #{leaveComments.userId}
+        </if>
         order by
         lc.create_date desc
     </select>

@@ -47,6 +47,24 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
     List<LinkedHashMap<String, Object>> selectOrderNumByDay();
 
     /**
+     * 房间类型销量比率统计
+     *
+     * @param year  年费
+     * @param month 月份
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectRoomTypeRateByMonth(@Param("year") String year, @Param("month") String month);
+
+    /**
+     * 房间类型销售比率统计
+     *
+     * @param year  年费
+     * @param month 月份
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectRoomTypePriceRateByMonth(@Param("year") String year, @Param("month") String month);
+
+    /**
      * 按月统计收益统计
      *
      * @param year   年份
@@ -65,4 +83,6 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectOrderNumByMonth(@Param("year") String year, @Param("month") String month, @Param("typeId") Integer typeId);
+
+
 }

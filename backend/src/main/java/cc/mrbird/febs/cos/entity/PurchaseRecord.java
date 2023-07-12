@@ -3,6 +3,7 @@ package cc.mrbird.febs.cos.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -71,4 +72,7 @@ public class PurchaseRecord implements Serializable {
 
     @TableField(exist = false)
     private String month;
+
+    @TableField(exist = false)
+    private List<PurchaseGoods> goodsList;
 }

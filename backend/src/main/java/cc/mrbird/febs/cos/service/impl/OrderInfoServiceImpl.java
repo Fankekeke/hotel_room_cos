@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.dao.*;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.service.IOrderInfoService;
+import cc.mrbird.febs.system.service.IMailService;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -42,6 +45,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private final OrderInfoMapper orderInfoMapper;
 
     private final BulletinInfoMapper bulletinInfoMapper;
+
+    private final StaffInfoMapper staffInfoMapper;
+
+    private final TemplateEngine templateEngine;
+
+    private final IMailService mailService;
 
     /**
      * 分页获取订单信息
@@ -71,6 +80,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if (orderInfo.getUserId() != null) {
             throw new FebsException("所属用户不能为空！");
         }
+        UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, orderInfo.getUserId()));
+        orderInfo.setUserId(user.getId());
+
         // 设置订单编号
         orderInfo.setCode("OR-" + System.currentTimeMillis());
         // 校验开始时间和结束时间【开始结束时间不能小于当前日期 结束日期不等大于开始日期】
@@ -92,6 +104,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         orderInfo.setDays(Math.toIntExact(completionCycle));
         orderInfo.setTotalPrice(orderInfo.getRentDay().multiply(new BigDecimal(orderInfo.getDays())));
+
+        // 发送邮件
+        if (StrUtil.isNotEmpty(user.getMail())) {
+            Context context = new Context();
+            context.setVariable("today", DateUtil.formatDate(new Date()));
+            context.setVariable("custom", user.getName() + "，您好。您的订单已生成，请注意查看");
+            String emailContent = templateEngine.process("registerEmail", context);
+            mailService.sendHtmlMail(user.getMail(), DateUtil.formatDate(new Date()) + "客房入住提示", emailContent);
+        }
         return this.save(orderInfo);
     }
 
@@ -211,10 +232,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<LinkedHashMap<String, Object>> orderNumByMonth = baseMapper.selectOrderNumByMonth(year, month, typeId);
         result.put("orderNumByMonth", orderNumByMonth);
 
-        // 房间类型统计
-        if (typeId != null) {
+        // 房间类型销量统计
 
-        }
+        // 房间类型销售统计
+
         return result;
     }
 
@@ -282,12 +303,41 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // 返回数据
         LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
             {
+                put("staffNum", 0);
+                put("totalRevenue", 0);
+                put("totalOrderNum", 0);
+                put("roomNum", 0);
                 put("monthOrderNum", 0);
                 put("monthOrderTotal", 0);
                 put("yearOrderNum", 0);
                 put("yearOrderTotal", 0);
             }
         };
+
+        // 员工数量
+        int staffNum = staffInfoMapper.selectCount(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getDelFlag, "0"));
+        result.put("staffNum", staffNum);
+
+        List<OrderInfo> allOrderList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getDelFlag, "0")
+                .eq(OrderInfo::getOrderStatus, "1").eq(OrderInfo::getRecedeFlag, "0"));
+        List<PurchaseRecord> allRecordList = purchaseRecordMapper.selectList(Wrappers.<PurchaseRecord>lambdaQuery().eq(PurchaseRecord::getDelFlag, "0")
+                .in(PurchaseRecord::getStatus, Arrays.asList("1", "4")));
+        // 总收益
+        BigDecimal orderTotal = allOrderList.stream().map(OrderInfo::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal recordTotal = allRecordList.stream().map(PurchaseRecord::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalRevenue = orderTotal.add(recordTotal);
+        result.put("totalRevenue", totalRevenue);
+
+        // 总订单量
+        int orderCount = allOrderList.size();
+        int recordCount = allRecordList.size();
+        int totalOrderNum = orderCount + recordCount;
+        result.put("totalOrderNum", totalOrderNum);
+
+        // 房间数量
+        int roomNum = roomInfoMapper.selectCount(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, "0"));
+        result.put("roomNum", roomNum);
+
 
         // 获取当前月份及当前月份
         String year = StrUtil.toString(DateUtil.year(new Date()));
@@ -327,6 +377,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // 近十天内工单统计
         List<LinkedHashMap<String, Object>> orderNumDay = baseMapper.selectOrderNumByDay();
         result.put("orderNumDay", orderNumDay);
+
+        // 本月内房间类型销量统计
+        List<LinkedHashMap<String, Object>> typeRate = baseMapper.selectRoomTypeRateByMonth(year, month);
+        result.put("typeRate", typeRate);
 
         // 公告信息
         result.put("bulletin", bulletinInfoMapper.selectList(Wrappers.<BulletinInfo>lambdaQuery()));

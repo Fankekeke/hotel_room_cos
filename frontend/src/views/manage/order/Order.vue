@@ -15,18 +15,18 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="客户名称"
+                label="房间号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.userName"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单状态"
+                label="用户名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.pharmacyName"/>
+                <a-input v-model="queryParams.userName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -39,7 +39,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">添加订单</a-button>-->
+        <a-button type="primary" ghost @click="add">添加订单</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -64,24 +64,10 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
-          <a-icon v-if="record.status == 2" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderComplete(record)" title="订单完成" style="margin-left: 15px"></a-icon>
-          <a-icon v-if="record.status == 1" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderAuditOpen(record)" title="修 改" style="margin-left: 15px"></a-icon>
-          <a-icon type="cluster" @click="orderMapOpen(record)" title="地 图" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.status == 3 && record.evaluateId == null" type="pushpin" @click="handleorderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
-    <order-audit
-      @close="handleorderAuditViewClose"
-      @success="handleorderAuditViewSuccess"
-      :orderShow="orderAuditView.visiable"
-      :orderData="orderAuditView.data">
-    </order-audit>
-    <order-status
-      @close="handleorderStatusViewClose"
-      @success="handleorderStatusViewSuccess"
-      :orderStatusShow="orderStatusView.visiable"
-      :orderStatusData="orderStatusView.data">
-    </order-status>
     <order-view
       @close="handleorderViewClose"
       :orderShow="orderView.visiable"
@@ -92,11 +78,12 @@
       @success="handleorderAddSuccess"
       :orderAddShow="orderAdd.visiable">
     </order-add>
-    <MapView
-      @close="handleorderMapViewClose"
-      :orderShow="orderMapView.visiable"
-      :orderData="orderMapView.data">
-    </MapView>
+    <order-evaluate
+      @close="handleorderEvaluateClose"
+      @success="handleorderEvaluateSuccess"
+      :orderEvaluateVisiable="orderEvaluate.visiable"
+      :orderData="orderEvaluate.data">
+    </order-evaluate>
   </a-card>
 </template>
 
@@ -105,15 +92,13 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import OrderAdd from './OrderAdd'
-import OrderAudit from './OrderAudit'
+import OrderEvaluate from './OrderEvaluate'
 import OrderView from './OrderView'
-import OrderStatus from './OrderStatus.vue'
-import MapView from '../map/Map.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'order',
-  components: {OrderView, OrderAudit, RangeDate, OrderStatus, OrderAdd, MapView},
+  components: {OrderView, OrderEvaluate, RangeDate, OrderAdd},
   data () {
     return {
       advanced: false,
@@ -123,15 +108,11 @@ export default {
       orderEdit: {
         visiable: false
       },
-      orderMapView: {
-        visiable: false,
-        data: null
-      },
       orderView: {
         visiable: false,
         data: null
       },
-      orderStatusView: {
+      orderEvaluate: {
         visiable: false,
         data: null
       },
@@ -172,24 +153,34 @@ export default {
           if (text !== null) {
             return text
           } else {
-            return <a-tag>平台内下单</a-tag>
+            return '- -'
           }
         }
       }, {
-        title: '头像',
-        dataIndex: 'userImages',
+        title: '房间图片',
+        dataIndex: 'images',
         customRender: (text, record, index) => {
-          if (!record.userImages) return <a-avatar shape="square" icon="user" />
+          if (!record.images) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
           </a-popover>
         }
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
+        title: '房间类型',
+        dataIndex: 'typeName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '房间号',
+        dataIndex: 'name',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -199,7 +190,7 @@ export default {
         }
       }, {
         title: '订单总额',
-        dataIndex: 'amount',
+        dataIndex: 'totalPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text + '元'
@@ -208,8 +199,8 @@ export default {
           }
         }
       }, {
-        title: '初始地址',
-        dataIndex: 'startAddress',
+        title: '入住时间',
+        dataIndex: 'startDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -218,8 +209,8 @@ export default {
           }
         }
       }, {
-        title: '运货地址',
-        dataIndex: 'endAddress',
+        title: '离开时间',
+        dataIndex: 'endDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -229,17 +220,13 @@ export default {
         }
       }, {
         title: '订单状态',
-        dataIndex: 'status',
+        dataIndex: 'orderStatus',
         customRender: (text, row, index) => {
           switch (text) {
-            case 0:
+            case '0':
               return <a-tag>待付款</a-tag>
-            case 1:
-              return <a-tag>正在分配</a-tag>
-            case 2:
-              return <a-tag>运输中</a-tag>
-            case 3:
-              return <a-tag>运输完成</a-tag>
+            case '1':
+              return <a-tag>已支付</a-tag>
             default:
               return '- -'
           }
@@ -273,13 +260,6 @@ export default {
         this.$message.success('订单完成')
         this.fetch()
       })
-    },
-    orderMapOpen (row) {
-      this.orderMapView.data = row
-      this.orderMapView.visiable = true
-    },
-    handleorderMapViewClose () {
-      this.orderMapView.visiable = false
     },
     orderStatusOpen (row) {
       this.orderStatusView.data = row
@@ -324,9 +304,21 @@ export default {
     handleorderAddClose () {
       this.orderAdd.visiable = false
     },
+    handleorderEvaluateOpen (row) {
+      this.orderEvaluate.data = row
+      this.orderEvaluate.visiable = true
+    },
+    handleorderEvaluateClose () {
+      this.orderEvaluate.visiable = false
+    },
     handleorderAddSuccess () {
       this.orderAdd.visiable = false
       this.$message.success('添加平台订单成功')
+      this.search()
+    },
+    handleorderEvaluateSuccess () {
+      this.orderEvaluate.visiable = false
+      this.$message.success('订单评价成功')
       this.search()
     },
     edit (record) {
@@ -425,9 +417,6 @@ export default {
         // 如果分页信息为空，则设置为默认值
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
-      }
-      if (params.status === undefined) {
-        delete params.status
       }
       this.$get('/cos/order-info/page', {
         ...params

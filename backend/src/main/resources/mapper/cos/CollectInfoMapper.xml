@@ -35,6 +35,9 @@
         <if test="collectInfo.userName != null and collectInfo.userName != ''">
             AND ui.name LIKE CONCAT('%',#{collectInfo.userName},'%')
         </if>
+        <if test="collectInfo.userId != null and collectInfo.userId != ''">
+            AND ui.user_id = #{collectInfo.userId}
+        </if>
         order by
         ci.create_date desc
     </select>

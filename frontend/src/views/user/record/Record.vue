@@ -61,6 +61,9 @@
             </a-tooltip>
           </template>
         </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-icon type="file-search" @click="recordViewOpen(record)" title="详 情"></a-icon>
+        </template>
       </a-table>
     </div>
     <record-view :evaluateShow="rentView.visiable" :evaluateData="rentView.data" @close="rentView.visiable = false"></record-view>
@@ -178,6 +181,10 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -185,7 +192,7 @@ export default {
     this.fetch()
   },
   methods: {
-    rentViewOpen (row) {
+    recordViewOpen (row) {
       this.rentView.data = row
       this.rentView.visiable = true
     },

@@ -3,8 +3,11 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.OrderEvaluate;
+import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.service.IOrderEvaluateService;
+import cc.mrbird.febs.cos.service.IUserInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import java.util.List;
 public class OrderEvaluateController {
 
     private final IOrderEvaluateService orderEvaluateService;
+
+    private final IUserInfoService userInfoService;
 
     /**
      * 分页获取订单评价信息
@@ -65,6 +70,9 @@ public class OrderEvaluateController {
     @PostMapping
     public R save(OrderEvaluate orderEvaluate) {
         orderEvaluate.setCreateDate(DateUtil.formatDateTime(new Date()));
+        // 设置用户ID
+        UserInfo user = userInfoService.getOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, orderEvaluate.getUserId()));
+        orderEvaluate.setUserId(user.getId());
         return R.ok(orderEvaluateService.save(orderEvaluate));
     }
 
