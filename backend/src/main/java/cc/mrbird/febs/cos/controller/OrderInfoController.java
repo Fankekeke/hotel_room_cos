@@ -36,6 +36,17 @@ public class OrderInfoController {
     }
 
     /**
+     * 根据房间编号获取订单记录
+     *
+     * @param roomCode 房间编号
+     * @return 结果
+     */
+    @GetMapping("/orderRecord/{roomCode}")
+    public R selectOrderRecordByRoomCode(@PathVariable("roomCode") String roomCode) {
+        return R.ok(orderInfoService.selectOrderRecordByRoomCode(roomCode));
+    }
+
+    /**
      * 数据统计
      *
      * @param checkDate 选择日期

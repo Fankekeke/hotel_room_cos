@@ -276,10 +276,20 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public LinkedHashMap<String, Object> selectOrderRecordByRoomCode(String roomCode) {
         // 返回数据
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("room", null);
+                put("order", Collections.emptyList());
+            }
+        };
         // 获取房间信息
         RoomInfo room = roomInfoMapper.selectOne(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getCode, roomCode));
-        return null;
+        result.put("room", room);
+
+        // 订单
+        List<OrderInfo> orderList = this.list(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getRoomCode, roomCode));
+        result.put("order", orderList);
+        return result;
     }
 
     /**
