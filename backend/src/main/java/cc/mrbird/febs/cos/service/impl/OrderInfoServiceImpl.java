@@ -311,7 +311,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         for (RoomInfo room : roomList) {
             // 房间类型
             room.setTypeName(typeMap.get(room.getType()));
-            // 此房间的订单信息
+            // 此房间的订单信息q
             List<OrderInfo> orderRoomList = orderMap.get(room.getCode());
             if (CollectionUtil.isEmpty(orderRoomList)) {
                 room.setCheckStatus(false);
