@@ -1,19 +1,32 @@
 <template>
   <a-card :bordered="false" class="card-area">
     <div style="background:#ECECEC; padding:30px;margin-top: 30px;margin-bottom: 30px">
-      <a-row :gutter="30">
-        <a-col :span="6" v-for="(item, index) in workStatusList" :key="index">
-          <a-card :bordered="false">
-            <span slot="title">
-              <a-badge status="processing"/>
-              <span style="font-size: 14px;font-family: SimHei">
-                {{ item.pharmacyName }}
-                <span style="margin-left: 15px">评价得分：【{{ item.score }}分】</span>
-              </span>
-            </span>
-          </a-card>
-        </a-col>
-      </a-row>
+      <!-- 搜索区域 -->
+      <a-form layout="horizontal">
+        <a-row :gutter="15">
+          <div :class="advanced ? null: 'fold'">
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="选择时间"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.roomName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="房间类型"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.typeName"/>
+              </a-form-item>
+            </a-col>
+          </div>
+          <span style="float: right; margin-top: 3px;">
+            <a-button type="primary" @click="search">查询</a-button>
+          </span>
+        </a-row>
+      </a-form>
     </div>
     <a-row :gutter="20">
       <a-col :span="12">
@@ -37,7 +50,7 @@ export default {
   name: 'Work',
   data () {
     return {
-      workStatusList: [],
+      queryParams: {},
       loading: false,
       series1: [],
       chartOptions1: {
@@ -46,7 +59,7 @@ export default {
           height: 300
         },
         title: {
-          text: '十天内各家订单数量统计',
+          text: '订单数量统计',
           align: 'left'
         },
         plotOptions: {
@@ -89,7 +102,7 @@ export default {
           height: 300
         },
         title: {
-          text: '十天内各家订单收益统计',
+          text: '订单收益统计',
           align: 'left'
         },
         plotOptions: {
@@ -132,14 +145,12 @@ export default {
     this.selectOrderDays()
   },
   methods: {
-    getWorkStatusList () {
-      this.$get(`/cos/pharmacy-info/evaluate/rank`).then((r) => {
-        this.workStatusList = r.data.data
-      })
-    },
-    selectOrderDays () {
-      this.$get(`/cos/pharmacy-info/selectOrderDays`).then((r) => {
-        console.log(JSON.stringify(r.data))
+    getStatusList () {
+      this.$get(`/cos/order-info/statistics`, this.queryParams).then((r) => {
+        this.priceByMonth = r.data.priceByMonth
+        this.orderNumByMonth = r.data.orderNumByMonth
+        this.typeOrderNumRateByMonth = r.data.typeOrderNumRateByMonth
+        this.typePriceRateByMonth = r.data.typePriceRateByMonth
       })
     }
   }
