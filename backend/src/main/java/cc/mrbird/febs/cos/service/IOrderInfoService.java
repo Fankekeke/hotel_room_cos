@@ -68,6 +68,14 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     LinkedHashMap<String, Object> selectRecordDetail(Integer recordId);
 
     /**
+     * 根据房间编号获取订单记录
+     *
+     * @param roomCode 房间编号
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectOrderRecordByRoomCode(String roomCode);
+
+    /**
      * 统计房间当前状态
      *
      * @return 结果

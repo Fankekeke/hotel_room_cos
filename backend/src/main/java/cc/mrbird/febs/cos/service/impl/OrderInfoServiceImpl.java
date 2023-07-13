@@ -268,6 +268,21 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     /**
+     * 根据房间编号获取订单记录
+     *
+     * @param roomCode 房间编号
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectOrderRecordByRoomCode(String roomCode) {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+        // 获取房间信息
+        RoomInfo room = roomInfoMapper.selectOne(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getCode, roomCode));
+        return null;
+    }
+
+    /**
      * 统计房间当前状态
      *
      * @return 结果
