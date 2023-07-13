@@ -233,8 +233,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         result.put("orderNumByMonth", orderNumByMonth);
 
         // 房间类型销量统计
+        List<LinkedHashMap<String, Object>> typeOrderNumRateByMonth = baseMapper.selectRoomTypeRateByMonth(year, month);
+        result.put("typeOrderNumRateByMonth", typeOrderNumRateByMonth);
 
         // 房间类型销售统计
+        List<LinkedHashMap<String, Object>> typePriceRateByMonth = baseMapper.selectRoomTypePriceRateByMonth(year, month);
+        result.put("typePriceRateByMonth", typePriceRateByMonth);
 
         return result;
     }

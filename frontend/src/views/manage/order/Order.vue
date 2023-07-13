@@ -78,12 +78,6 @@
       @success="handleorderAddSuccess"
       :orderAddShow="orderAdd.visiable">
     </order-add>
-    <order-evaluate
-      @close="handleorderEvaluateClose"
-      @success="handleorderEvaluateSuccess"
-      :orderEvaluateVisiable="orderEvaluate.visiable"
-      :orderData="orderEvaluate.data">
-    </order-evaluate>
   </a-card>
 </template>
 
@@ -92,7 +86,6 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import OrderAdd from './OrderAdd'
-import OrderEvaluate from './OrderEvaluate'
 import OrderView from './OrderView'
 moment.locale('zh-cn')
 
