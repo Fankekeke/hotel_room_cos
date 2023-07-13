@@ -283,7 +283,7 @@ export default {
         params.current = this.pagination.defaultCurrent
       }
       params.userId = this.currentUser.userId
-      this.$get('/cos/evaluate-info/page', {
+      this.$get('/cos/order-evaluate/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

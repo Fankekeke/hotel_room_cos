@@ -64,10 +64,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return baseMapper.selectOrderPage(page, orderInfo);
     }
 
-    public static void main(String[] args) {
-        System.out.println(DateUtil.between(DateUtil.parseDate("2023-07-05"), DateUtil.parseDate("2023-07-06"), DateUnit.DAY));
-    }
-
     /**
      * 添加订单
      *
@@ -370,7 +366,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         // 获取当前月份及当前月份
         String year = StrUtil.toString(DateUtil.year(new Date()));
-        String month = StrUtil.toString(DateUtil.month(new Date()));
+        String month = StrUtil.toString(DateUtil.month(new Date()) + 1);
 
         // 本年订单
         List<OrderInfo> orderList = baseMapper.selectOrderByDate(year, null);

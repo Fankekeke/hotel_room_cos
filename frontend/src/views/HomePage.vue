@@ -44,16 +44,16 @@
               <a-col :span="4"></a-col>
               <a-col :span="4"></a-col>
               <a-col :span="4">
-                <head-info title="司机数量" :content="titleData.driverNum" :center="false" :bordered="false"/>
+                <head-info title="员工数量" :content="titleData.staffNum" :center="false" :bordered="false"/>
               </a-col>
               <a-col :span="4">
-                <head-info title="搬运工数量" :content="titleData.staffMoveNum" :center="false" :bordered="false"/>
+                <head-info title="总收益" :content="titleData.totalRevenue" :center="false" :bordered="false"/>
               </a-col>
               <a-col :span="4">
-                <head-info title="总订单数" :content="titleData.orderNum" :center="false" :bordered="false"/>
+                <head-info title="总订单量" :content="titleData.totalOrderNum" :center="false" :bordered="false"/>
               </a-col>
               <a-col :span="4">
-                <head-info title="总收益" :content="titleData.amount" :center="false"/>
+                <head-info title="房间数量" :content="titleData.roomNum" :center="false"/>
               </a-col>
             </a-row>
           </div>
@@ -83,10 +83,10 @@ export default {
   data () {
     return {
       titleData: {
-        driverNum: 0,
-        staffMoveNum: 0,
-        orderNum: 0,
-        amount: 0
+        staffNum: 0,
+        totalRevenue: 0,
+        totalOrderNum: 0,
+        roomNum: 0
       },
       series: [],
       chartOptions: {
@@ -137,16 +137,6 @@ export default {
     }
   },
   methods: {
-    cleanMessage (id) {
-      this.$get(`/cos/notify-info/setReadStatus/${id}`).then((r) => {
-        this.getNewList()
-      })
-    },
-    getNewList () {
-      this.$get(`/cos/notify-info/detail/${this.user.userId}`).then((r) => {
-        this.bulletinList = r.data.data
-      })
-    },
     welcome () {
       const date = new Date()
       const hour = date.getHours()
@@ -158,7 +148,6 @@ export default {
     }
   },
   mounted () {
-    this.getNewList()
     this.welcomeMessage = this.welcome()
     this.$get(`index/${this.user.username}`).then((r) => {
       let data = r.data.data

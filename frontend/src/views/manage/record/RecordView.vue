@@ -5,38 +5,39 @@
         关闭
       </a-button>
     </template>
-    <div style="font-size: 13px;font-family: SimHei" v-if="evaluateInfo !== null">
+    <div style="font-size: 13px;font-family: SimHei" v-if="evaluateData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基本信息</span></a-col>
         <a-col :span="8"><b>采购单号：</b>
-          {{ evaluateInfo.recordCode }}
+          {{ evaluateData.recordCode }}
         </a-col>
         <a-col :span="8"><b>总金额：</b>
-          {{ evaluateInfo.totalPrice ? evaluateInfo.totalPrice : '- -' }}
+          {{ evaluateData.totalPrice ? evaluateData.totalPrice + '元': '- -' }}
         </a-col>
         <a-col :span="8"><b>订单状态：</b>
-          <span v-if="evaluateInfo.status == 1">已支付</span>
-          <span v-if="evaluateInfo.status == 2">退款中</span>
-          <span v-if="evaluateInfo.status == 3">已退货</span>
+          <span v-if="evaluateData.status == 1">已支付</span>
+          <span v-if="evaluateData.status == 2">退款中</span>
+          <span v-if="evaluateData.status == 3">已退货</span>
+          <span v-if="evaluateData.status == 4">驳回</span>
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>购买用户：</b>
-          {{ evaluateInfo.name }}
+          {{ evaluateData.name }}
         </a-col>
         <a-col :span="8"><b>身份证号码：</b>
-          {{ evaluateInfo.idCard ? evaluateInfo.idCard : '- -' }}
+          {{ evaluateData.idCard ? evaluateData.idCard : '- -' }}
         </a-col>
         <a-col :span="8"><b>联系方式：</b>
-          {{ evaluateInfo.phone ? evaluateInfo.phone : '- -' }}
+          {{ evaluateData.phone ? evaluateData.phone : '- -' }}
         </a-col>
       </a-row>
       <br/>
     </div>
-    <a-row style="padding-left: 24px;padding-right: 24px;">
+    <a-row style="padding-left: 24px;padding-right: 24px;font-family: SimHei">
       <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">购买信息</span></a-col>
-       <a-col :span="24">
+      <a-col :span="24">
         <a-table :columns="columns" :data-source="goodsList">
         </a-table>
       </a-col>
@@ -99,7 +100,14 @@ export default {
         }
       }, {
         title: '价格',
-        dataIndex: 'itemPrice'
+        dataIndex: 'itemPrice',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        }
       }]
     }
   },

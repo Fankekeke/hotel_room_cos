@@ -133,10 +133,17 @@ export default {
         title: '采购状态',
         dataIndex: 'status',
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case '1':
+              return <a-tag>已支付</a-tag>
+            case '2':
+              return <a-tag>退款中</a-tag>
+            case '3':
+              return <a-tag>已退货</a-tag>
+            case '4':
+              return <a-tag>驳回</a-tag>
+            default:
+              return '- -'
           }
         }
       }, {

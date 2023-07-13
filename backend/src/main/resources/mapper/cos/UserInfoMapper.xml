@@ -12,7 +12,8 @@
         id_card,
         mail,
         phone,
-        create_date
+        create_date,
+        images
         from
         user_info
         where

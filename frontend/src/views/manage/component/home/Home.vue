@@ -272,8 +272,8 @@ export default {
       this.$get('/cos/order-info/home/data').then((r) => {
         let titleData = { staffNum: r.data.staffNum, totalRevenue: r.data.totalRevenue, totalOrderNum: r.data.totalOrderNum, roomNum: r.data.roomNum }
         this.$emit('setTitle', titleData)
-        this.titleData.monthOrderNum = r.data.orderNumMonth
-        this.titleData.monthOrderTotal = r.data.orderAmountMonth
+        this.titleData.monthOrderNum = r.data.monthOrderNum
+        this.titleData.monthOrderTotal = r.data.monthOrderTotal
         this.titleData.yearOrderNum = r.data.yearOrderNum
         this.titleData.yearOrderTotal = r.data.yearOrderTotal
         this.bulletinList = r.data.bulletin
