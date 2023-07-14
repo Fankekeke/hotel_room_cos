@@ -3,21 +3,23 @@
     <div style="background:#ECECEC; padding:30px;margin-top: 30px;margin-bottom: 30px">
       <a-row :gutter="30">
         <a-col :span="6" v-for="(item, index) in roomList" :key="index">
-          <a-card :bordered="false">
-             <a-carousel autoplay style="height: 250px;" v-if="item.images !== undefined && item.images !== ''">
-                <div style="width: 100%;height: 150px" v-for="(item, index) in item.images.split(',')" :key="index">
-                  <img :src="'http://127.0.0.1:9527/imagesWeb/'+item" style="width: 100%;height: 250px">
-                </div>
-              </a-carousel>
-            <span slot="title">
-              <a-badge status="processing"/>
-              <span style="font-size: 14px;font-family: SimHei">
-                {{ item.name }} | {{ item.typeName }}
-                <span style="margin-left: 15px;color: green" v-if="item.checkStatus == true">已入住</span>
-                <span style="margin-left: 15px;color: red" v-if="item.checkStatus == false">未入住</span>
+          <div style="background: #e8e8e8">
+            <a-carousel autoplay style="height: 250px;" v-if="item.images !== undefined && item.images !== ''">
+              <div style="width: 100%;height: 150px" v-for="(item, index) in item.images.split(',')" :key="index">
+                <img :src="'http://127.0.0.1:9527/imagesWeb/'+item" style="width: 100%;height: 250px">
+              </div>
+            </a-carousel>
+            <a-card :bordered="false">
+              <span slot="title">
+                <a-badge status="processing"/>
+                <span style="font-size: 14px;font-family: SimHei">
+                  {{ item.name }} | {{ item.typeName }}
+                  <span style="margin-left: 15px;color: green" v-if="item.checkStatus == true">已入住</span>
+                  <span style="margin-left: 15px;color: red" v-if="item.checkStatus == false">未入住</span>
+                </span>
               </span>
-            </span>
-          </a-card>
+            </a-card>
+          </div>
         </a-col>
       </a-row>
     </div>
@@ -73,4 +75,5 @@ export default {
   line-height: 250px;
   overflow: hidden;
 }
+
 </style>

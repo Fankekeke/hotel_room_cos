@@ -222,14 +222,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         // 获取当前月份及当前月份
         String year = StrUtil.toString(DateUtil.year(DateUtil.parseDate(checkDate)));
-        String month = StrUtil.toString(DateUtil.month(DateUtil.parseDate(checkDate)));
+        String month = StrUtil.toString(DateUtil.month(DateUtil.parseDate(checkDate)) + 1);
 
         // 本月收益
-        List<LinkedHashMap<String, Object>> priceByMonth = baseMapper.selectPriceByMonth(year, month, typeId);
+        List<LinkedHashMap<String, Object>> priceByMonth = baseMapper.selectPriceByMonth(year, month, typeId, checkDate);
         result.put("priceByMonth", priceByMonth);
 
         // 本月订单
-        List<LinkedHashMap<String, Object>> orderNumByMonth = baseMapper.selectOrderNumByMonth(year, month, typeId);
+        List<LinkedHashMap<String, Object>> orderNumByMonth = baseMapper.selectOrderNumByMonth(year, month, typeId, checkDate);
         result.put("orderNumByMonth", orderNumByMonth);
 
         // 房间类型销量统计

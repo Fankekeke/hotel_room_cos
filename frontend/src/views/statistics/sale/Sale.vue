@@ -4,13 +4,13 @@
       <!-- 搜索区域 -->
       <a-form layout="horizontal">
         <a-row :gutter="15">
-          <div :class="advanced ? null: 'fold'">
+          <div>
             <a-col :md="6" :sm="24">
               <a-form-item
                 label="选择时间"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.roomName"/>
+                <a-month-picker v-model="queryParams.checkDate" />
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -18,7 +18,9 @@
                 label="房间类型"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.typeName"/>
+                <a-select v-model="queryParams.typeId">
+                  <a-select-option :value="item.id" v-for="(item, index) in typeList" :key="index">{{ item.typeName }}</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -32,14 +34,14 @@
       <a-col :span="24">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
-          <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>
+          <apexchart v-show="!loading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>
         </a-card>
       </a-col>
       <br/>
       <a-col :span="24">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
-          <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions2" :series="series2"></apexchart>
+          <apexchart v-show="!loading" type="bar" height="300" :options="chartOptions2" :series="series2"></apexchart>
         </a-card>
       </a-col>
     </a-row>
@@ -61,10 +63,13 @@
 </template>
 
 <script>
+import moment from 'moment'
+moment.locale('zh-cn')
 export default {
   name: 'Work',
   data () {
     return {
+      typeList: [],
       queryParams: {},
       loading: false,
       series1: [],
@@ -148,7 +153,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val + ' 单'
+              return val + ' 元'
             }
           }
         }
@@ -198,22 +203,37 @@ export default {
             }
           }
         }]
-      },
+      }
     }
   },
   mounted () {
-    this.getWorkStatusList()
-    this.selectOrderDays()
+    this.search()
+    this.handleSearch()
   },
   methods: {
-    getStatusList () {
-      this.$get(`/cos/order-info/statistics`, this.queryParams).then((r) => {
+    handleSearch () {
+      this.$get('/cos/room-type/list').then((r) => {
+        this.typeList = r.data.data
+      })
+    },
+    search () {
+      this.getStatusList({
+        ...this.queryParams
+      })
+    },
+    getStatusList (params = {}) {
+      this.loading = true
+      if (params.checkDate) {
+        params.checkDate = moment(params.checkDate).format('YYYY-MM-DD')
+      }
+      this.$get(`/cos/order-info/statistics`, params).then((r) => {
         this.priceByMonth = r.data.priceByMonth
         this.orderNumByMonth = r.data.orderNumByMonth
         this.typeOrderNumRateByMonth = r.data.typeOrderNumRateByMonth
         this.typePriceRateByMonth = r.data.typePriceRateByMonth
 
         if (r.data.orderNumByMonth !== null && r.data.orderNumByMonth.length !== 0) {
+          let values = []
           if (this.chartOptions1.xaxis.categories.length === 0) {
             this.chartOptions1.xaxis.categories = Array.from(r.data.orderNumByMonth, ({days}) => days)
           }
@@ -221,17 +241,28 @@ export default {
           values.push(itemData)
           this.series1 = values
         }
-        this.series[0].data = Array.from(r.data.priceByMonth, ({price}) => price)
-        this.chartOptions.xaxis.categories = Array.from(r.data.priceByMonth, ({days}) => days)
+
+        if (r.data.priceByMonth !== null && r.data.priceByMonth.length !== 0) {
+          let values = []
+          if (this.chartOptions2.xaxis.categories.length === 0) {
+            this.chartOptions2.xaxis.categories = Array.from(r.data.priceByMonth, ({days}) => days)
+          }
+          let itemData = { name: '交易金额', data: Array.from(r.data.priceByMonth, ({price}) => price) }
+          values.push(itemData)
+          this.series2 = values
+        }
 
         if (r.data.typeOrderNumRateByMonth !== null && r.data.typeOrderNumRateByMonth.length !== 0) {
           this.chartOptions3.labels = Array.from(r.data.typeOrderNumRateByMonth, ({typeName}) => typeName)
           this.series3 = Array.from(r.data.typeOrderNumRateByMonth, ({count}) => count)
         }
         if (r.data.typePriceRateByMonth !== null && r.data.typePriceRateByMonth.length !== 0) {
-          this.chartOptions3.labels = Array.from(r.data.typePriceRateByMonth, ({typeName}) => typeName)
-          this.series3 = Array.from(r.data.typePriceRateByMonth, ({count}) => count)
+          this.chartOptions4.labels = Array.from(r.data.typePriceRateByMonth, ({typeName}) => typeName)
+          this.series4 = Array.from(r.data.typePriceRateByMonth, ({count}) => count)
         }
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       })
     }
   }

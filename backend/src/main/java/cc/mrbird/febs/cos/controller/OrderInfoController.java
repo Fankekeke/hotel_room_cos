@@ -54,7 +54,7 @@ public class OrderInfoController {
      * @return 结果
      */
     @GetMapping("/statistics")
-    public R selectRoomStatistics(@RequestParam("checkDate") String checkDate, @RequestParam(value = "typeId", required = false) Integer typeId) {
+    public R selectRoomStatistics(@RequestParam(value = "checkDate", required = false) String checkDate, @RequestParam(value = "typeId", required = false) Integer typeId) {
         return R.ok(orderInfoService.selectRoomStatistics(checkDate, typeId));
     }
 

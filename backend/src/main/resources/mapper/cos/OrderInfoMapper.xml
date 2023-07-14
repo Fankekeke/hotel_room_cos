@@ -154,15 +154,16 @@
         left join room_info ri on
         (ri.`type` = rt.id)
         left join order_info oi on
-        (oi.room_code = ri.code)
-        where
-        1 = 1
+        (oi.room_code = ri.code
         <if test="year != null and year != ''">
             AND DATE_FORMAT(oi.create_date, '%Y') = #{year}
         </if>
         <if test="month != null and month != ''">
             AND DATE_FORMAT(oi.create_date, '%c') = #{month}
         </if>
+        )
+        where
+        1 = 1
         group by
         rt.id
     </select>
@@ -172,21 +173,22 @@
         select
         rt.id,
         rt.type_name,
-        IFNULL(SUM(oi.total_price), 0) AS price
+        IFNULL(SUM(oi.total_price), 0) AS count
         from
         room_type rt
         left join room_info ri on
         (ri.`type` = rt.id)
         left join order_info oi on
-        (oi.room_code = ri.code)
-        where
-        1 = 1
+        (oi.room_code = ri.code
         <if test="year != null and year != ''">
             AND DATE_FORMAT(oi.create_date, '%Y') = #{year}
         </if>
         <if test="month != null and month != ''">
             AND DATE_FORMAT(oi.create_date, '%c') = #{month}
         </if>
+        )
+        where
+        1 = 1
         group by
         rt.id
     </select>
@@ -203,7 +205,7 @@
         from
         (
         select
-        DATE_FORMAT(DATE_SUB(last_day(curdate()), interval xc-1 day), '%Y-%m-%d') as date
+        DATE_FORMAT(DATE_SUB(last_day(#{checkDate}), interval xc-1 day), '%Y-%m-%d') as date
         from
         (
         select
@@ -252,24 +254,25 @@
         where
         x0.date >= (
         select
-        date_add(curdate(), interval-day(curdate())+ 1 day))) as tempDay
+        date_add(#{checkDate}, interval-day(#{checkDate})+ 1 day))) as tempDay
         left join order_info oi on
         (DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( tempDay.date, '%Y-%m-%d'))
         left join room_info ri on
-        (ri.code = oi.room_code)
-        where
-        1 = 1
+        (ri.code = oi.room_code
         <if test="year != null and year != ''">
             AND DATE_FORMAT(oi.create_date, '%Y') = #{year}
         </if>
         <if test="month != null and month != ''">
             AND DATE_FORMAT(oi.create_date, '%c') = #{month}
         </if>
-        <if test="typeId != null'">
+        <if test="typeId != null">
             AND ri.type = #{typeId}
         </if>
+        )
+        where
+        1 = 1
         group by
-        tempDay.date asc
+        tempDay.date
     </select>
 
     <!-- 按月统计工单统计 -->
@@ -284,7 +287,7 @@
         from
         (
         select
-        DATE_FORMAT(DATE_SUB(last_day(curdate()), interval xc-1 day), '%Y-%m-%d') as date
+        DATE_FORMAT(DATE_SUB(last_day(#{checkDate}), interval xc-1 day), '%Y-%m-%d') as date
         from
         (
         select
@@ -333,23 +336,24 @@
         where
         x0.date >= (
         select
-        date_add(curdate(), interval-day(curdate())+ 1 day))) as tempDay
+        date_add(#{checkDate}, interval-day(#{checkDate})+ 1 day))) as tempDay
         left join order_info oi on
         (DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( tempDay.date, '%Y-%m-%d'))
         left join room_info ri on
-        (ri.code = oi.room_code)
-        where
-        1 = 1
+        (ri.code = oi.room_code
         <if test="year != null and year != ''">
             AND DATE_FORMAT(oi.create_date, '%Y') = #{year}
         </if>
         <if test="month != null and month != ''">
             AND DATE_FORMAT(oi.create_date, '%c') = #{month}
         </if>
-        <if test="typeId != null'">
+        <if test="typeId != null">
             AND ri.type = #{typeId}
         </if>
+        )
+        where
+        1 = 1
         group by
-        tempDay.date asc
+        tempDay.date
     </select>
 </mapper>

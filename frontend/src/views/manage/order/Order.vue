@@ -39,8 +39,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">添加订单</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button type="primary" ghost @click="add">添加订单</a-button>-->
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -91,7 +91,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'order',
-  components: {OrderView, OrderEvaluate, RangeDate, OrderAdd},
+  components: {OrderView, RangeDate, OrderAdd},
   data () {
     return {
       advanced: false,
