@@ -29,16 +29,31 @@
       </a-form>
     </div>
     <a-row :gutter="20">
-      <a-col :span="12">
+      <a-col :span="24">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
           <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>
         </a-card>
       </a-col>
-      <a-col :span="12">
+      <br/>
+      <a-col :span="24">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
           <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions2" :series="series2"></apexchart>
+        </a-card>
+      </a-col>
+    </a-row>
+    <a-row :gutter="20">
+      <a-col :span="12">
+        <a-card hoverable :bordered="false" style="width: 100%">
+          <a-skeleton active v-if="loading" />
+          <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions3" :series="series3"></apexchart>
+        </a-card>
+      </a-col>
+      <a-col :span="12">
+        <a-card hoverable :bordered="false" style="width: 100%">
+          <a-skeleton active v-if="loading" />
+          <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions4" :series="series4"></apexchart>
         </a-card>
       </a-col>
     </a-row>
@@ -137,7 +152,53 @@ export default {
             }
           }
         }
-      }
+      },
+      series3: [],
+      chartOptions3: {
+        chart: {
+          type: 'donut',
+          height: 300
+        },
+        labels: [],
+        title: {
+          text: '销量统计',
+          align: 'left'
+        },
+        responsive: [{
+          breakpoint: 380,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+      },
+      series4: [],
+      chartOptions4: {
+        chart: {
+          type: 'donut',
+          height: 300
+        },
+        labels: [],
+        title: {
+          text: '销售统计',
+          align: 'left'
+        },
+        responsive: [{
+          breakpoint: 380,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+      },
     }
   },
   mounted () {
@@ -151,6 +212,26 @@ export default {
         this.orderNumByMonth = r.data.orderNumByMonth
         this.typeOrderNumRateByMonth = r.data.typeOrderNumRateByMonth
         this.typePriceRateByMonth = r.data.typePriceRateByMonth
+
+        if (r.data.orderNumByMonth !== null && r.data.orderNumByMonth.length !== 0) {
+          if (this.chartOptions1.xaxis.categories.length === 0) {
+            this.chartOptions1.xaxis.categories = Array.from(r.data.orderNumByMonth, ({days}) => days)
+          }
+          let itemData = { name: '订单数', data: Array.from(r.data.orderNumByMonth, ({count}) => count) }
+          values.push(itemData)
+          this.series1 = values
+        }
+        this.series[0].data = Array.from(r.data.priceByMonth, ({price}) => price)
+        this.chartOptions.xaxis.categories = Array.from(r.data.priceByMonth, ({days}) => days)
+
+        if (r.data.typeOrderNumRateByMonth !== null && r.data.typeOrderNumRateByMonth.length !== 0) {
+          this.chartOptions3.labels = Array.from(r.data.typeOrderNumRateByMonth, ({typeName}) => typeName)
+          this.series3 = Array.from(r.data.typeOrderNumRateByMonth, ({count}) => count)
+        }
+        if (r.data.typePriceRateByMonth !== null && r.data.typePriceRateByMonth.length !== 0) {
+          this.chartOptions3.labels = Array.from(r.data.typePriceRateByMonth, ({typeName}) => typeName)
+          this.series3 = Array.from(r.data.typePriceRateByMonth, ({count}) => count)
+        }
       })
     }
   }

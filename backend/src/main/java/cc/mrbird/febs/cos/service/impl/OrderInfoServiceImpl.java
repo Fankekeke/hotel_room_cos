@@ -213,6 +213,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Override
     public LinkedHashMap<String, Object> selectRoomStatistics(String checkDate, Integer typeId) {
+        if (StrUtil.isEmpty(checkDate)) {
+            checkDate = DateUtil.formatDate(new Date());
+        }
+
         // 返回数据
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
