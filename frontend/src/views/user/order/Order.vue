@@ -39,7 +39,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">添加订单</a-button>
+<!--        <a-button type="primary" ghost @click="add">添加订单</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->

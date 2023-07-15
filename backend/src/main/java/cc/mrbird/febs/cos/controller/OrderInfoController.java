@@ -31,8 +31,8 @@ public class OrderInfoController {
      * @return 结果
      */
     @GetMapping("/reserve/room")
-    public R selectReserveRoom(String startDate, String endDate) {
-        return R.ok(orderInfoService.selectReserveRoom(startDate, endDate));
+    public R selectReserveRoom(String startDate, String endDate, @RequestParam(value = "typeId", required = false) Integer typeId) {
+        return R.ok(orderInfoService.selectReserveRoom(startDate, endDate, typeId));
     }
 
     /**

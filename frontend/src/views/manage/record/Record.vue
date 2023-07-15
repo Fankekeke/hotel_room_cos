@@ -63,10 +63,12 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="recordViewOpen(record)" title="详 情"></a-icon>
+          <a-icon v-if="record.status == 2" type="paper-clip" @click="audit(record)" title="审 核" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
     <record-view :evaluateShow="rentView.visiable" :evaluateData="rentView.data" @close="rentView.visiable = false"></record-view>
+    <record-return :evaluateShow="rentReturn.visiable" :evaluateData="rentReturn.data" @close="rentReturn.visiable = false" @success="rentReturnSuccess"></record-return>
   </a-card>
 </template>
 
@@ -75,11 +77,12 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import RecordView from './RecordView.vue'
+import RecordReturn from './RecordReturn.vue'
 moment.locale('zh-cn')
 
 export default {
   name: 'evaluate',
-  components: {RangeDate, RecordView},
+  components: {RangeDate, RecordView, RecordReturn},
   data () {
     return {
       advanced: false,
@@ -90,6 +93,10 @@ export default {
         visiable: false
       },
       rentView: {
+        visiable: false,
+        data: null
+      },
+      rentReturn: {
         visiable: false,
         data: null
       },
@@ -199,6 +206,15 @@ export default {
     this.fetch()
   },
   methods: {
+    rentReturnSuccess () {
+      this.rentReturn.visiable = false
+      this.$message.success('审核成功')
+      this.reset()
+    },
+    audit (row) {
+      this.rentReturn.data = row
+      this.rentReturn.visiable = true
+    },
     recordViewOpen (row) {
       this.rentView.data = row
       this.rentView.visiable = true

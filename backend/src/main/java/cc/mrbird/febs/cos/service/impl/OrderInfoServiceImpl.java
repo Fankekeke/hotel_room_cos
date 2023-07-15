@@ -152,7 +152,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return 结果
      */
     @Override
-    public List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate) {
+    public List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate, Integer typeId) {
         // 返回数据
         List<LinkedHashMap<String, Object>> result = new ArrayList<>();
 

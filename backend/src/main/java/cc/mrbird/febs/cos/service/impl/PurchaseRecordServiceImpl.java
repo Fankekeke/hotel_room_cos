@@ -13,6 +13,7 @@ import cc.mrbird.febs.cos.service.IPurchaseRecordService;
 import cc.mrbird.febs.system.service.IMailService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -68,7 +69,7 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean purchaseReturn(PurchaseRecord purchaseRecord) {
-        UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, purchaseRecord.getUserId()));
+        UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getId, purchaseRecord.getUserId()));
         // 同意退回
         if ("3".equals(purchaseRecord.getStatus())) {
             // 需要退回的商品
@@ -119,14 +120,15 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
         purchaseRecord.setCreateDate(DateUtil.formatDateTime(new Date()));
         purchaseRecord.setStatus("1");
 
-        List<Integer> commodityIdList = purchaseRecord.getGoodsList().stream().map(PurchaseGoods::getCommodityId).collect(Collectors.toList());
+        List<PurchaseGoods> goodsList = JSONUtil.toList(purchaseRecord.getGoodsList(), PurchaseGoods.class);
+        List<Integer> commodityIdList = goodsList.stream().map(PurchaseGoods::getCommodityId).collect(Collectors.toList());
 
         // 获取商品信息
         List<CommodityInfo> commodityList = (List<CommodityInfo>) commodityInfoService.listByIds(commodityIdList);
         Map<Integer, CommodityInfo> commodityMap = commodityList.stream().collect(Collectors.toMap(CommodityInfo::getId, e -> e));
 
         BigDecimal totalPrice = BigDecimal.ZERO;
-        for (PurchaseGoods goods : purchaseRecord.getGoodsList()) {
+        for (PurchaseGoods goods : goodsList) {
             goods.setPurchaseCode(purchaseRecord.getRecordCode());
             CommodityInfo commodity = commodityMap.get(goods.getCommodityId());
             // 减少库存
@@ -141,7 +143,7 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
         // 更新库存
         commodityInfoService.updateBatchById(commodityList);
         // 添加详情
-        goodsService.saveBatch(purchaseRecord.getGoodsList());
+        goodsService.saveBatch(goodsList);
         // 发送邮件
         if (StrUtil.isNotEmpty(user.getMail())) {
             Context context = new Context();

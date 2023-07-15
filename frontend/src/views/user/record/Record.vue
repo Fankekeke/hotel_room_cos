@@ -63,6 +63,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="recordViewOpen(record)" title="详 情"></a-icon>
+          <a-icon v-if="record.status == 1 && record.checkDay > -3" type="number" @click="passGoods(record)" title="退 货" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -199,6 +200,13 @@ export default {
     this.fetch()
   },
   methods: {
+    passGoods (row) {
+      row.status = '2'
+      this.$put('/cos/purchase-record', row).then((r) => {
+        this.reset()
+        this.$message.success('提交退货申请成功')
+      })
+    },
     recordViewOpen (row) {
       this.rentView.data = row
       this.rentView.visiable = true

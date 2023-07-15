@@ -48,6 +48,18 @@ public class CommodityInfoController {
     }
 
     /**
+     * 获取商品信息
+     *
+     * @param key 商品名称
+     * @return 结果
+     */
+    @GetMapping("/commodity/list")
+    public R commodityList(@RequestParam(value = "key", required = false) String key) {
+        return R.ok(commodityInfoService.list(Wrappers.<CommodityInfo>lambdaQuery().eq(CommodityInfo::getDelFlag, 0).gt(CommodityInfo::getStockNum, 0)
+                .like(StrUtil.isNotEmpty(key), CommodityInfo::getName, key)));
+    }
+
+    /**
      * 获取商品详细信息
      *
      * @param id ID

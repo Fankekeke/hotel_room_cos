@@ -1,6 +1,6 @@
 <template>
   <div :class="[multipage === true ? 'multi-page':'single-page', 'not-menu-page', 'home-page']">
-    <a-row :gutter="8" class="head-info">
+    <a-row :gutter="8" class="head-info" v-if="user.roleId == 74">
       <a-card class="head-info-card">
         <a-col :span="12">
           <div class="head-info-avatar">
@@ -15,28 +15,6 @@
             </div>
             <div class="head-info-time">上次登录时间：{{user.lastLoginTime ? user.lastLoginTime : '第一次访问系统'}}</div>
           </div>
-        </a-col>
-        <a-col :span="24" v-if="user.roleId == 75"></a-col>
-        <a-col :span="12" v-if="user.roleId == 75">
-          <a-card hoverable :loading="loading" :bordered="false" title="消息通知" style="height: 550px;overflow: auto">
-            <div style="padding: 0 22px">
-              <a-list item-layout="vertical" :pagination="false" :data-source="bulletinList">
-                <a-list-item slot="renderItem" key="item.title" slot-scope="item, index">
-                  <template slot="actions">
-                  <span key="message" style="font-size: 13px">
-                    <a-icon type="message" style="margin-right: 8px" />
-                    {{ item.createDate }}
-                  </span>
-                  </template>
-                  <a-list-item-meta :description="item.content" style="font-size: 13px">
-                  </a-list-item-meta>
-                  <a slot="actions">
-                    <span @click="cleanMessage(item.id)">已阅</span>
-                  </a>
-                </a-list-item>
-              </a-list>
-            </div>
-          </a-card>
         </a-col>
         <a-col :span="12">
           <div>
@@ -60,7 +38,8 @@
         </a-col>
       </a-card>
     </a-row>
-    <home @setTitle="setTitleData"></home>
+    <home v-if="user.roleId == 74" @setTitle="setTitleData"></home>
+    <work v-if="user.roleId == 75"></work>
     <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 74">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>
@@ -75,11 +54,12 @@ import HeadInfo from '@/views/common/HeadInfo'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import Home from './manage/component/home/Home'
+import Work from './manage/component/work/Work'
 moment.locale('zh-cn')
 
 export default {
   name: 'HomePage',
-  components: {Home, HeadInfo},
+  components: {Home, Work, HeadInfo},
   data () {
     return {
       titleData: {

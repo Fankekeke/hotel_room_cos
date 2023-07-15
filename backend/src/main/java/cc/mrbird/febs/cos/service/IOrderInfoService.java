@@ -46,9 +46,10 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      *
      * @param startDate 开始时间
      * @param endDate   结束时间
+     * @param typeId    房间类型
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate);
+    List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate, Integer typeId);
 
     /**
      * 数据统计

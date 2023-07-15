@@ -10,7 +10,23 @@
                 label="订单编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.code"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="房间名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.name"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="用户名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.userName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -96,7 +112,7 @@ export default {
         dataIndex: 'orderCode'
       }, {
         title: '订单价格',
-        dataIndex: 'amount',
+        dataIndex: 'totalPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text + '元'
@@ -108,26 +124,38 @@ export default {
         title: '评价客户',
         dataIndex: 'userName'
       }, {
-        title: '头像',
-        dataIndex: 'userImages',
-        customRender: (text, record, index) => {
-          if (!record.userImages) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages.split(',')[0] } />
-          </a-popover>
+        title: '房间号',
+        dataIndex: 'name',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
         }
       }, {
-        title: '初始地址',
-        dataIndex: 'startAddress'
+        title: '开始时间',
+        dataIndex: 'startDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '运输地址',
-        dataIndex: 'endAddress'
+        title: '结束时间',
+        dataIndex: 'endDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '综合得分',
-        dataIndex: 'overScore',
+        title: '评价得分',
+        dataIndex: 'score',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text + '分'
@@ -282,7 +310,10 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      params.userId = this.currentUser.userId
+      if (params.type === undefined) {
+        delete params.type
+      }
+      this.userId = this.currentUser.userId
       this.$get('/cos/order-evaluate/page', {
         ...params
       }).then((r) => {

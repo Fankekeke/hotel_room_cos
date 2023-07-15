@@ -74,5 +74,5 @@ public class PurchaseRecord implements Serializable {
     private String month;
 
     @TableField(exist = false)
-    private List<PurchaseGoods> goodsList;
+    private String goodsList;
 }

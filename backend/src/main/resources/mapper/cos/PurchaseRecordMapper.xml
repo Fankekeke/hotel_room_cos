@@ -15,7 +15,8 @@
         ui.name,
         ui.images,
         ui.id_card,
-        ui.phone
+        ui.phone,
+        datediff(pr.create_date,curdate()) as checkDay
         from
         purchase_record pr
         left join user_info ui on
