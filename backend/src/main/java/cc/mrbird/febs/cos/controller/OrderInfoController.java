@@ -31,8 +31,8 @@ public class OrderInfoController {
      * @return 结果
      */
     @GetMapping("/reserve/room")
-    public R selectReserveRoom(String startDate, String endDate, @RequestParam(value = "typeId", required = false) Integer typeId) {
-        return R.ok(orderInfoService.selectReserveRoom(startDate, endDate, typeId));
+    public R selectReserveRoom(String startDate, String endDate, @RequestParam(value = "typeId", required = false) Integer typeId, Integer userId) {
+        return R.ok(orderInfoService.selectReserveRoomByDate(startDate, endDate, typeId, userId));
     }
 
     /**
@@ -64,8 +64,8 @@ public class OrderInfoController {
      * @return 结果
      */
     @GetMapping("/room/status")
-    public R selectRoomStatus() {
-        return R.ok(orderInfoService.selectRoomStatus());
+    public R selectRoomStatus(Integer userId) {
+        return R.ok(orderInfoService.selectRoomStatus(userId));
     }
 
     /**

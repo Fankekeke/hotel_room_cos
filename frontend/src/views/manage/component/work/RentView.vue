@@ -1,7 +1,7 @@
 <template>
   <a-modal v-model="show" title="房间预订" @cancel="onClose" :width="900">
     <template slot="footer">
-      <a-button key="back1" @click="onClose">
+      <a-button key="back1" @click="addOrder">
         预订
       </a-button>
       <a-button key="back" @click="onClose" type="danger">
@@ -9,6 +9,16 @@
       </a-button>
     </template>
     <div style="font-size: 13px;font-family: SimHei" v-if="rentData !== null">
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">预订信息</span></a-col>
+        <a-col :span="8"><b>开始时间：</b>
+          {{ startDate }}
+        </a-col>
+        <a-col :span="8"><b>结束时间：</b>
+          {{ endDate }}
+        </a-col>
+      </a-row>
+      <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">房间信息</span></a-col>
         <a-col :span="8"><b>房间名称：</b>
@@ -156,6 +166,7 @@
 
 <script>
 import moment from 'moment'
+import {mapState} from 'vuex'
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -174,9 +185,19 @@ export default {
     },
     rentData: {
       type: Object
+    },
+    startDate: {
+      type: String
+    },
+    endDate: {
+      type: String
     }
   },
   computed: {
+    ...mapState({
+      multipage: state => state.setting.multipage,
+      user: state => state.account.user
+    }),
     show: {
       get: function () {
         return this.rentShow
@@ -207,9 +228,14 @@ export default {
     }
   },
   methods: {
+    addOrder () {
+      let data = { roomCode: this.rentData.code, startDate: this.startDate, endDate: this.endDate, rentDay: this.rentData.rentPrice, userId: this.user.userId }
+      this.$post('/cos/order-info', data).then((r) => {
+        this.$emit('success')
+      })
+    },
     selectDetail (roomId) {
       this.$get(`/cos/room-info/detail/${roomId}`).then((r) => {
-        console.log(r.data.room)
         this.roomInfo = r.data.room
         this.typeInfo = r.data.type
       })

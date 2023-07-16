@@ -52,6 +52,16 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     List<LinkedHashMap<String, Object>> selectReserveRoom(String startDate, String endDate, Integer typeId);
 
     /**
+     * 查询可预约房间
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @param typeId    房间类型
+     * @return 结果
+     */
+    List<RoomInfo> selectReserveRoomByDate(String startDate, String endDate, Integer typeId, Integer userId);
+
+    /**
      * 数据统计
      *
      * @param checkDate 选择日期
@@ -81,7 +91,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      *
      * @return 结果
      */
-    List<RoomInfo> selectRoomStatus();
+    List<RoomInfo> selectRoomStatus(Integer userId);
 
     /**
      * 获取主页统计数据

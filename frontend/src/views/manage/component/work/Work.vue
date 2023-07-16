@@ -13,7 +13,7 @@
                     <a-range-picker @change="onChange" style="width: 100%" size="large"/>
                   </a-col>
                   <a-col :span="4" :offset="2">
-                    <a-button type="primary" size="large">
+                    <a-button type="primary" size="large" @click="fetch">
                       查找
                     </a-button>
                   </a-col>
@@ -52,21 +52,22 @@
               </div>
             </div>
             <template slot="actions" class="ant-card-actions">
-              <a-icon key="heart" type="heart" style="color: red"/>
+              <a-icon v-if="item.hasHeart" key="heart" type="heart" style="color: red" @click="collectDelete(item.id)"/>
+              <a-icon v-else key="heart" type="heart"  @click="collectAdd(item.code)"/>
               <a-icon key="ellipsis" type="ellipsis" @click="view(item)"/>
             </template>
           </a-card>
         </div>
       </a-col>
     </a-row>
-    <rent-view :rentShow="rentView.visiable" :rentData="rentView.data" @close="rentView.visiable = false"></rent-view>
+    <rent-view :rentShow="rentView.visiable" :rentData="rentView.data" :startDate="startDate" :endDate="endDate" @close="rentView.visiable = false" @success="orderSuccess"></rent-view>
   </div>
 </template>
 
 <script>
 
 import RentView from './RentView.vue'
-
+import {mapState} from 'vuex'
 export default {
   name: 'Work',
   components: {RentView},
@@ -78,27 +79,76 @@ export default {
       rentView: {
         visiable: false,
         data: null
-      }
+      },
+      startDate: null,
+      endDate: null
     }
+  },
+  computed: {
+    ...mapState({
+      currentUser: state => state.account.user
+    })
   },
   mounted () {
     this.getWorkStatusList()
     this.getRoomType()
   },
   methods: {
+    orderSuccess () {
+      this.$message.success('添加订单成功')
+      this.fetch()
+    },
+    collectDelete (id) {
+      this.$delete(`/cos/collect-info/${id}`).then((r) => {
+        this.$message.success('取消收藏成功')
+        this.fetch()
+      })
+    },
+    collectAdd (roomCode) {
+      let data = { userId: this.currentUser.userId, roomCode }
+      this.$post(`/cos/collect-info`, data).then((r) => {
+        this.$message.success('收藏成功')
+        this.fetch()
+      })
+    },
     view (record) {
-      this.rentView.visiable = true
-      this.rentView.data = record
+      if (this.startDate && this.endDate) {
+        this.rentView.visiable = true
+        this.rentView.data = record
+      } else {
+        this.$message.error('请选择入住时间！')
+      }
     },
     getRoomType () {
       this.$get(`/cos/room-type/list`).then((r) => {
         this.roomTypeList = r.data.data
       })
     },
-    getWorkStatusList () {
-      this.$get(`/cos/order-info/room/status`).then((r) => {
-        this.roomList = r.data.data
-      })
+    getWorkStatusList (params) {
+      if (params) {
+        params.userId = this.currentUser.userId
+        this.$get(`/cos/order-info/reserve/room`, params).then((r) => {
+          this.roomList = r.data.data
+        })
+      } else {
+        this.$get(`/cos/order-info/room/status`, { userId: this.currentUser.userId }).then((r) => {
+          this.roomList = r.data.data
+        })
+      }
+    },
+    fetch () {
+      if (this.startDate && this.endDate) {
+        let params = { startDate: this.startDate, endDate: this.endDate }
+        this.getWorkStatusList(params)
+      } else {
+        this.getWorkStatusList()
+      }
+    },
+    onChange (date, dateString) {
+      this.startDate = dateString[0]
+      this.endDate = dateString[1]
+      let params = { startDate: this.startDate, endDate: this.endDate }
+      this.getWorkStatusList(params)
     }
   }
 }

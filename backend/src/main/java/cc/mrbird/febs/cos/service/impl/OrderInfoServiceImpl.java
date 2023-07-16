@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.dao.*;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.service.IOrderInfoService;
+import cc.mrbird.febs.system.domain.User;
 import cc.mrbird.febs.system.service.IMailService;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
@@ -52,6 +53,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     private final IMailService mailService;
 
+    private final CollectInfoMapper collectInfoMapper;
+
     /**
      * 分页获取订单信息
      *
@@ -73,7 +76,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Override
     public boolean orderSave(OrderInfo orderInfo) throws Exception {
-        if (orderInfo.getUserId() != null) {
+        if (orderInfo.getUserId() == null) {
             throw new FebsException("所属用户不能为空！");
         }
         UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, orderInfo.getUserId()));
@@ -91,6 +94,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         orderInfo.setOrderStatus("1");
+        orderInfo.setRecedeFlag("0");
         orderInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
 
         // 计算入住天数
@@ -167,6 +171,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if (CollectionUtil.isEmpty(roomTypeList) || CollectionUtil.isEmpty(roomList)) {
             return null;
         }
+
         // 房间按类型分组
         Map<Integer, List<RoomInfo>> roomMap = roomList.stream().collect(Collectors.groupingBy(RoomInfo::getType));
 
@@ -200,6 +205,72 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             }
             tempMap.put("value", checkRoomList);
             result.add(tempMap);
+        }
+        return result;
+    }
+
+    /**
+     * 查询可预约房间
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @param typeId    房间类型
+     * @return 结果
+     */
+    @Override
+    public List<RoomInfo> selectReserveRoomByDate(String startDate, String endDate, Integer typeId, Integer userId) {
+        // 返回数据
+        List<RoomInfo> result = new ArrayList<>();
+
+        // 用户信息
+        UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo> lambdaQuery().eq(UserInfo::getUserId, userId));
+        // 收藏信息
+        List<CollectInfo> collectInfoList = collectInfoMapper.selectList(Wrappers.<CollectInfo>lambdaQuery().eq(CollectInfo::getUserId, user.getId()));
+        Map<String, Integer> collectMap = collectInfoList.stream().collect(Collectors.toMap(CollectInfo::getRoomCode, CollectInfo::getId));
+
+        // 所有订单信息isOverlap
+        List<OrderInfo> orderList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getDelFlag, "0").eq(OrderInfo::getRecedeFlag, "0"));
+        Map<String, List<OrderInfo>> orderMap = orderList.stream().collect(Collectors.groupingBy(OrderInfo::getRoomCode));
+
+        // 所有房间信息
+        List<RoomInfo> roomList = roomInfoMapper.selectList(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, 0));
+        // 所有房间类型
+        List<RoomType> roomTypeList = roomTypeMapper.selectList(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, 0));
+        if (CollectionUtil.isEmpty(roomTypeList) || CollectionUtil.isEmpty(roomList)) {
+            return null;
+        }
+
+        // 房间类型
+        List<RoomType> typeList = roomTypeMapper.selectList(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, "0"));
+        Map<Integer, String> typeMap = typeList.stream().collect(Collectors.toMap(RoomType::getId, RoomType::getTypeName));
+
+        // 房间按类型分组
+        Map<Integer, List<RoomInfo>> roomMap = roomList.stream().collect(Collectors.groupingBy(RoomInfo::getType));
+
+        for (RoomType roomType : roomTypeList) {
+            List<RoomInfo> checkRoomList = new ArrayList<>();
+            // 获取所属类型房间
+            List<RoomInfo> roomTempList = roomMap.get(roomType.getId());
+            if (CollectionUtil.isEmpty(roomTempList)) {
+                continue;
+            }
+            for (RoomInfo roomInfo : roomTempList) {
+                roomInfo.setHasHeart(CollectionUtil.isNotEmpty(collectMap) && collectMap.get(roomInfo.getCode()) != null);
+                // 房间类型
+                roomInfo.setTypeName(typeMap.get(roomInfo.getType()));
+                List<OrderInfo> orderTempList = orderMap.get(roomInfo.getCode());
+                if (CollectionUtil.isEmpty(orderTempList)) {
+                    checkRoomList.add(roomInfo);
+                    continue;
+                }
+                // 获取是否有订单存在选择时间内
+                boolean overlapCheck = orderTempList.stream().anyMatch(e -> DateUtil.isOverlap(DateUtil.parseDate(startDate), DateUtil.parseDate(endDate), DateUtil.parseDate(e.getStartDate()), DateUtil.parseDate(e.getEndDate())));
+                if (overlapCheck) {
+                    continue;
+                }
+                checkRoomList.add(roomInfo);
+            }
+            result.addAll(checkRoomList);
         }
         return result;
     }
@@ -298,20 +369,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return 结果
      */
     @Override
-    public List<RoomInfo> selectRoomStatus() {
+    public List<RoomInfo> selectRoomStatus(Integer userId) {
         // 当前所有房间信息
         List<RoomInfo> roomList = roomInfoMapper.selectList(Wrappers.<RoomInfo>lambdaQuery().eq(RoomInfo::getDelFlag, "0"));
         // 所有订单信息
         List<OrderInfo> orderList = orderInfoMapper.selectList(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getDelFlag, "0"));
         Map<String, List<OrderInfo>> orderMap = orderList.stream().collect(Collectors.groupingBy(OrderInfo::getRoomCode));
 
+        // 用户信息
+        UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo> lambdaQuery().eq(UserInfo::getUserId, userId));
+        // 收藏信息
+        List<CollectInfo> collectInfoList = collectInfoMapper.selectList(Wrappers.<CollectInfo>lambdaQuery().eq(CollectInfo::getUserId, user.getId()));
+        Map<String, Integer> collectMap = collectInfoList.stream().collect(Collectors.toMap(CollectInfo::getRoomCode, CollectInfo::getId));
+
         // 房间类型
         List<RoomType> typeList = roomTypeMapper.selectList(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, "0"));
         Map<Integer, String> typeMap = typeList.stream().collect(Collectors.toMap(RoomType::getId, RoomType::getTypeName));
         for (RoomInfo room : roomList) {
+            room.setHasHeart(CollectionUtil.isNotEmpty(collectMap) && collectMap.get(room.getCode()) != null);
             // 房间类型
             room.setTypeName(typeMap.get(room.getType()));
-            // 此房间的订单信息q
+            // 此房间的订单信息
             List<OrderInfo> orderRoomList = orderMap.get(room.getCode());
             if (CollectionUtil.isEmpty(orderRoomList)) {
                 room.setCheckStatus(false);
