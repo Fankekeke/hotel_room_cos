@@ -378,10 +378,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         // 用户信息
         UserInfo user = userInfoMapper.selectOne(Wrappers.<UserInfo> lambdaQuery().eq(UserInfo::getUserId, userId));
-        // 收藏信息
-        List<CollectInfo> collectInfoList = collectInfoMapper.selectList(Wrappers.<CollectInfo>lambdaQuery().eq(CollectInfo::getUserId, user.getId()));
-        Map<String, Integer> collectMap = collectInfoList.stream().collect(Collectors.toMap(CollectInfo::getRoomCode, CollectInfo::getId));
 
+        Map<String, Integer> collectMap = new HashMap<>(16);
+        if (user != null) {
+            // 收藏信息
+            List<CollectInfo> collectInfoList = collectInfoMapper.selectList(Wrappers.<CollectInfo>lambdaQuery().eq(CollectInfo::getUserId, user.getId()));
+            collectMap = collectInfoList.stream().collect(Collectors.toMap(CollectInfo::getRoomCode, CollectInfo::getId));
+        }
         // 房间类型
         List<RoomType> typeList = roomTypeMapper.selectList(Wrappers.<RoomType>lambdaQuery().eq(RoomType::getDelFlag, "0"));
         Map<Integer, String> typeMap = typeList.stream().collect(Collectors.toMap(RoomType::getId, RoomType::getTypeName));
