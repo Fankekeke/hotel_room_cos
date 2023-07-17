@@ -13,16 +13,16 @@
                 <a-month-picker v-model="queryParams.checkDate" />
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="房间类型"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.typeId">
-                  <a-select-option :value="item.id" v-for="(item, index) in typeList" :key="index">{{ item.typeName }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="6" :sm="24">-->
+<!--              <a-form-item-->
+<!--                label="房间类型"-->
+<!--                :labelCol="{span: 5}"-->
+<!--                :wrapperCol="{span: 18, offset: 1}">-->
+<!--                <a-select v-model="queryParams.typeId">-->
+<!--                  <a-select-option :value="item.id" v-for="(item, index) in typeList" :key="index">{{ item.typeName }}</a-select-option>-->
+<!--                </a-select>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
