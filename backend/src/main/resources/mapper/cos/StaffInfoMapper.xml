@@ -29,7 +29,7 @@
         left join dept_info di on
         (di.id = si.dept_id)
         left join position_info poi on
-        (poi.id - si.position_id)
+        (poi.id = si.position_id)
         where
         1 = 1
         and si.del_flag = '0'

@@ -7,18 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="出租标题"
+                label="房间编号"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.title"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="房屋地址"
+                label="房间名称"
                 :labelCol="{span: 4}"
                 :wrapperCol="{span: 18, offset: 2}">
-                <a-input v-model="queryParams.address"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
           </div>

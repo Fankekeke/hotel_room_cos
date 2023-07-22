@@ -356,7 +356,7 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.id = this.rowId
-        values.roomPictures = images.length > 0 ? images.join(',') : null
+        values.images = images.length > 0 ? images.join(',') : null
         this.setValues(values)
         if (!err) {
           this.loading = true
