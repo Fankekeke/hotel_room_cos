@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     orderSuccess () {
+      this.rentView.visiable = false
       this.$message.success('添加订单成功')
       this.fetch()
     },
