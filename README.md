@@ -1,7 +1,7 @@
-# 基于SpringBoot酒店客房管理系统.
+### 基于SpringBoot酒店客房管理系统.
 
 
-## 安装环境
+#### 安装环境
 
 JAVA 环境 
 
@@ -17,7 +17,7 @@ Idea 编译器 [https://blog.csdn.net/weixin_44505194/article/details/104452880]
 
 WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 
-## 采用技术及功能
+#### 采用技术及功能
 
 后端：SpringBoot、MybatisPlus、MySQL、Redis、
 前端：Vue、Apex、Antd、Axios
@@ -57,11 +57,11 @@ WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 （14）客房类型管理
 
 
-## 前台启动方式
+#### 前台启动方式
 安装所需文件 yarn install 
 运行 yarn run dev
 
-## 默认后台账户密码
+#### 默认后台账户密码
 [管理员]
 admin
 1234qwer
@@ -70,7 +70,7 @@ admin
 test1
 1234qwer
 
-## 项目截图
+#### 项目截图
 
 |  |  |
 |---------------------|---------------------|
@@ -84,11 +84,11 @@ test1
 
 
 
-## 演示视频
+#### 演示视频
 
 暂无
 
-## 获取方式
+#### 获取方式
 
 Email: fan1ke2ke@gmail.com
 
@@ -96,6 +96,6 @@ WeChat: `Storm_Berserker`
 
 `因为要恰饭资源非免费，伸手党勿扰，谢谢理解`
 
-## 接JAVAWEB毕设，纯原创，价格公道，诚信第一
+#### 接JAVAWEB毕设，纯原创，价格公道，诚信第一
 
 More info: [悲伤的橘子树](https://berserker287.github.io/)
