@@ -1,4 +1,4 @@
-### 基于SpringBoot酒店客房管理系统.
+### 基于SpringBoot + Vue酒店客房管理系统.
 
 
 #### 安装环境
