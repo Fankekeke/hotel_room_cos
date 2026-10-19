@@ -1,8 +1,17 @@
-### 基于SpringBoot + Vue酒店客房管理系统.
+![](https://img.shields.io/badge/License-MIT-blue.svg)
 
-酒店客房管理系统、PMS系统、智慧酒店系统、客房预订管理、酒店前台系统、客房管理系统
+![](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)
+
+![](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
+# 基于 SpringBoot + Vue  的酒店客房管理系统
+
+客房预订 · 在线支付 · 商品采购 · 员工协同 · 周边推荐 | 面向酒店运营、客户服务与内部管理的一体化平台
+
+本项目是一套基于 **Spring Boot + Vue** 的酒店客房管理系统，采用前后端分离架构，覆盖 **管理员、客户、员工** 三类核心角色。系统围绕"客房展示 → 收藏下单 → 在线支付 → 商品采购 → 入住服务 → 留言评价 → 员工协同"的完整业务闭环设计，打通酒店前台服务、客房管理、商品销售、客户关系与内部人事管理，实现酒店运营数字化、客户服务个性化、内部管理高效化。
 
 #### 安装环境
+️**注意**：请确保您的开发环境已安装以下依赖。
 
 JAVA 环境 
 
@@ -10,87 +19,177 @@ Node.js环境 [https://nodejs.org/en/] 选择14.17
 
 Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs
 
-Mysql 数据库 [https://blog.csdn.net/qq_40303031/article/details/88935262] 一定要把账户和密码记住
+Mysql 数据库 一定要把账户和密码记住
 
 redis
 
-Idea 编译器 [https://blog.csdn.net/weixin_44505194/article/details/104452880]
+Idea 编译器
 
-WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
+WebStorm OR VScode 编译器
 
 #### 采用技术及功能
 
 后端：SpringBoot、MybatisPlus、MySQL、Redis、
 前端：Vue、Apex、Antd、Axios
 
-平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件)
+平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件) + 百度地图 API
 
 平台后台：springboot(框架) + redis(缓存中间件) + shiro(权限中间件) + mybatisplus(orm) + restful风格接口 + mysql(数据库)
 
 开发环境：windows10 or windows7 ， vscode or webstorm ， idea + lambok
 
-（1）管理员系统公告管理
+---
 
-（2）用户对客房的收藏与删除
+## 核心特性
 
-（3）管理员酒店商品管理
+- **客房全生命周期管理**：支持客房类型管理、房间信息维护、房态实时展示（空闲/已预订/已入住/清洁中/维修中），客户可在线浏览、收藏、下单预订。
+- **支付宝在线支付**：集成支付宝支付 SDK，支持客房预订与商品采购的在线支付，支付状态实时同步，支持退款处理。
+- **酒店商品商城**：管理员发布酒店商品（如洗漱套装、餐饮套餐、纪念品等），客户可在线浏览、下单采购，支持购物车与订单管理。
+- **客户互动体系**：支持客户对酒店及客房留言、对已完成订单评价、收藏/取消收藏客房，形成客户反馈闭环。
+- **周边美食推荐**：基于酒店地理位置，推荐附近美食餐厅，支持餐厅信息展示、距离显示、用户评价，提升客户入住体验。
+---
 
-（4）酒店部门信息管理
+## 适用场景
 
-（5）酒店附近美食推荐
+- 中小型酒店/民宿客房预订与运营管理
+- 酒店内部客房、商品、人事一体化管理系统
+- 酒店客户服务与互动平台
+- 酒店周边生态推荐与服务延伸
+- 计算机类毕业设计/课程设计项目
+---
 
-（6）客户对酒店及客房的留言信息
+## 功能模块概览
 
-（7）客户对已经下单的订单做出评价
+## 管理员端
 
-（8）对可预约的客房进行下单处理
+管理员为酒店运营中枢，负责全局管控：
 
-（9）酒店职位信息管理
+### 客房管理
 
-（10）客户对酒店商品的采购记录
+- **客房类型管理**：管理客房类型，包括类型名称（如标准间、大床房、套房）、价格区间、床型、面积、可住人数、配套设施、类型图片、状态。
+- **房间管理**：管理具体客房信息，包括房间号、所属类型、楼层、房态（空闲/已预订/已入住/清洁中/维修中）、设施状态、房间图片。
+- **系统公告管理**：发布酒店公告，包括公告标题、内容、类型（活动通知/维护通知/优惠信息）、发布时间、置顶状态。
 
-（11）酒店客房的房间管理
+### 商品与采购
 
-（12）员工管理
+- **酒店商品管理**：管理酒店可售商品，包括商品名称、分类、价格、库存、商品描述、商品图片、上下架状态。
+- **商品采购记录**：查看客户对酒店商品的采购订单，包括订单号、客户信息、商品明细、支付状态、配送状态。
 
-（13）用户管理及消息通知
+### 人事管理
 
-（14）客房类型管理
+- **酒店部门信息管理**：管理酒店部门，包括部门名称、部门负责人、部门职能、联系电话。
+- **酒店职位信息管理**：管理酒店职位，包括职位名称、所属部门、职位职责、薪资范围。
+- **员工管理**：管理酒店员工，包括员工姓名、工号、所属部门、职位、手机号、账户状态、入职日期。
+
+### 客户与互动
+
+- **用户管理**：管理注册客户，包括客户ID、昵称、手机号、注册时间、账户状态、入住次数。
+- **消息通知**：向客户或员工发送系统消息，包括订单通知、活动通知、入住提醒等，支持批量发送。
+- **客户留言管理**：查看客户对酒店及客房的留言，支持回复与处理，形成客户反馈闭环。
+- **客户评价管理**：查看客户对已完成订单的评价，包括评分、评价内容、评价图片，支持回复评价。
+
+### 周边服务
+
+- **附近美食推荐管理**：管理酒店附近美食餐厅信息，包括餐厅名称、地址、距离、菜系、人均消费、餐厅图片、推荐理由、状态。
+
+## 客户端
+
+客户通过 Web / 小程序进行客房预订与酒店服务体验：
+
+### 账户与个人
+
+- **注册登录**：支持手机号+验证码注册与登录，支持微信授权登录。
+- **个人信息**：维护个人基本信息，包括昵称、手机号、头像、身份证信息（用于入住登记）。
+- **消息通知**：接收系统消息，包括订单状态变更、支付成功、入住提醒、评价回复、酒店活动等。
+
+### 客房预订
+
+- **客房浏览**：浏览可预约客房，支持按类型、价格、房态筛选，查看客房详情、图片、设施、价格。
+- **收藏与删除**：收藏感兴趣的客房，支持在个人中心查看收藏列表并取消收藏。
+- **下单处理**：选择客房与入住日期，填写入住人信息，提交预订订单。
+- **支付宝在线支付**：通过支付宝完成客房预订支付，支付成功后生成预订凭证。
+- **我的订单**：查看个人客房预订订单，包括订单状态（待支付/已预订/已入住/已完成/已取消）、入住信息、支付信息。
+- **订单评价**：对已完成的客房订单进行评价，包括评分、评价内容、图片上传。
+
+### 商品与互动
+
+- **酒店商品浏览**：浏览酒店可售商品，查看商品详情、价格、库存。
+- **商品采购**：将商品加入购物车或直接购买，提交采购订单并通过支付宝支付。
+- **采购记录**：查看个人商品采购历史，包括订单状态、物流/配送信息。
+- **留言信息**：对酒店整体或具体客房发表留言，包括留言内容、图片，查看管理员回复。
+
+## 员工端
+
+员工通过专属工作台处理酒店日常服务：
+
+### 账户与任务
+
+- **员工登录**：使用工号与密码登录，首次登录强制修改密码。
+- **个人信息**：查看个人基本信息，包括姓名、工号、部门、职位、联系方式。
+- **消息通知**：接收系统消息，包括新订单通知、入住提醒、客房清洁任务、客户留言回复等。
+
+### 客房服务
+
+- **房态管理**：查看客房实时房态，更新房态（如客人退房后标记为"清洁中"，清洁完成后标记为"空闲"）。
+- **入住登记**：为已预订客户办理入住，核对身份信息，分配房间，更新订单状态为"已入住"。
+- **退房处理**：为客户办理退房，检查房间设施，更新房态为"清洁中"，更新订单状态为"已完成"。
+
+### 订单与服务
+
+- **客房订单管理**：查看客房预订订单，包括待入住、已入住、已完成订单，支持订单详情查看。
+- **商品订单管理**：查看客户商品采购订单，支持订单处理与配送状态更新。
+- **客户留言处理**：查看客户留言，进行回复与处理。
+- **客户评价处理**：查看客户评价，进行回复与改进记录。
+
+---
+
+## 项目结构
+
+```text
+pharmacy-dispensing-system/
+├── backend/            # 后端 API 服务
+│   ├── src/
+│   │   ├── controllers/  # 控制器
+│   │   ├── models/       # 数据模型
+│   │   ├── routes/       # 路由
+│   │   └── services/     # 业务逻辑
+│   └── package.json
+├── frontend/           # 前端 Web 应用
+│   ├── src/
+│   │   ├── views/      # 页面视图
+│   │   ├── components/ # 公共组件
+│   │   └── store/      # 状态管理
+│   └── package.json
+├── docs/               # 项目文档与 API 接口说明
+├── LICENSE
+└── README.md
+```
+---
 
 
 #### 前台启动方式
 安装所需文件 yarn install 
 运行 yarn run dev
 
-#### 后端启动方式
-
-1.首先启动redis，进入redis目录终端。输入redis-server回车
-2.导入sql文件，修改数据库与redis连接配置
-3.idea中启动后端项目
-
 #### 默认后台账户密码
 [管理员]
 admin
-1234qwer
+123456
 
 [用户]
-test1
-1234qwer
+fank
+123456
 
 #### 项目截图
-
 |  |  |
 |---------------------|---------------------|
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/b02c5a3564d57a8e0d55a9e725193a1.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/ecd8d0081bc4d6c577ae351f5a7ada7.png) |
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/9013595272e7d99e2393f73cab30620.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/e873f798c7119f33ea9831d277b4778.png) |
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/824b300de49b9b218330fc8ace45fa2.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/c6a981234cdaa00f61c74fe4399bd38.png) |
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/37fa0b569acb2dbc2678b4b991efa5c.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/bb66240665449fd54ce121b37ed631a.png) |
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/9b77e28963f62b06b0200b089136c9e.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/b249398af81717bb5d48e4a70bf7ff0.png) |
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/07a1b5ef3f35407c82416c5b61a1fee.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/hotal.png) |
-|![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/3af6a7cfe0c8e568a524266c5561135.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/work/936e9baf53eb9a217af4f89c616dc19.png) |
-
-
-
+| ![](./assets/image%20(1).png) | ![](./assets/image%20(2).png) |
+| ![](./assets/image%20(3).png) | ![](./assets/image%20(4).png) |
+| ![](./assets/image%20(5).png) | ![](./assets/image%20(6).png) |
+| ![](./assets/image%20(7).png) | ![](./assets/image%20(8).png) |
+| ![](./assets/image%20(9).png) | ![](./assets/image%20(10).png) |
+| ![](./assets/image%20(11).png) | ![](./assets/image%20(12).png) |
+| ![](./assets/image%20(13).png) | 
 #### 演示视频
 
 暂无
@@ -107,7 +206,10 @@ WeChat: `Storm_Berserker`
 
 > 项目部署调试不好包退！功能逻辑没讲明白包退！
 
+<div align=center><img align="center" src="./assets/product_word.png" alt="fankekeke" /></div>
+
 #### 其它资源
+[2026年-答辩顺利通过-客户评价🀄](https://berserker287.github.io/2026/06/29/2026%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
 [2025年-答辩顺利通过-客户评价🍜](https://berserker287.github.io/2025/06/18/2025%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
@@ -125,11 +227,14 @@ WeChat: `Storm_Berserker`
 
 [计算机专业毕业答辩小tips](https://zhuanlan.zhihu.com/p/145911029)
 
-
 #### 接JAVAWEB毕设，纯原创，价格公道，诚信第一
 
 `网站建设、小程序、H5、APP、各种系统 选题+开题报告+任务书+程序定制+安装调试+项目讲解+论文+答辩PPT`
 
 More info: [悲伤的橘子树](https://berserker287.github.io/)
 
-<p><img align="center" src="https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/%E5%90%88%E4%BD%9C%E7%89%A9%E6%96%99%E6%A0%B7%E5%BC%8F%20(3).png" alt="fankekeke" /></p>
+<div align="center"><img align="center" src="./assets/chat_qr_code.png" alt="fankekeke" width=250 /></div>
+
+<p><img align="center" src="./assets/wechat_group.png" alt="fankekeke" /></p>
+
+**感谢查看**
